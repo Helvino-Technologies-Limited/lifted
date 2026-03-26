@@ -23,12 +23,12 @@ async function initDatabase() {
     }
 
     // Set real admin password
-    const defaultPassword = process.env.ADMIN_DEFAULT_PASSWORD || 'Admin@LiftedToLift2024';
+    const defaultPassword = process.env.ADMIN_DEFAULT_PASSWORD || 'Lifted@2026';
     const hash = await bcrypt.hash(defaultPassword, 12);
     await client.query(
       `INSERT INTO admin_users (username, password_hash, email, role)
-       VALUES ('admin', $1, 'admin@liftedtolift.org', 'superadmin')
-       ON CONFLICT (username) DO UPDATE SET password_hash = $1`,
+       VALUES ('admin', $1, 'liftedtolift@gmail.com', 'superadmin')
+       ON CONFLICT (username) DO UPDATE SET password_hash = $1, email = 'liftedtolift@gmail.com'`,
       [hash]
     );
 
