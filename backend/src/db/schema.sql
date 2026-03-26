@@ -182,9 +182,4 @@ INSERT INTO page_content (page, section, field, content) VALUES
   ('contact', 'header', 'subtitle', 'We''d love to hear from you. Reach out to learn more about our work or how you can get involved.')
 ON CONFLICT (page, section, field) DO NOTHING;
 
--- Default team members
-INSERT INTO team_members (name, title, bio, display_order) VALUES
-  ('Kevin Odhiambo', 'Founder & Executive Director', 'Visionary leader dedicated to transforming communities through education and empowerment.', 1),
-  ('Team Member', 'Program Director', 'Leading our strategic programs and community partnerships.', 2),
-  ('Team Member', 'Youth Empowerment Lead', 'Championing skills development and employment opportunities for youth.', 3)
-ON CONFLICT DO NOTHING;
+-- Team members are managed entirely via the admin panel (/admin/team)
