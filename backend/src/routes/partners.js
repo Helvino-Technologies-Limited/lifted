@@ -1,7 +1,7 @@
 const express = require('express');
 const { query } = require('../db');
 const { authenticate } = require('../middleware/auth');
-const { uploadImage } = require('../middleware/upload');
+const { uploadImage, cloudinaryUpload } = require('../middleware/upload');
 
 const router = express.Router();
 
@@ -16,7 +16,7 @@ router.get('/', async (req, res) => {
   }
 });
 
-router.post('/', authenticate, uploadImage.single('logo'), async (req, res) => {
+router.post('/', authenticate, uploadImage.single('logo'), cloudinaryUpload, async (req, res) => {
   const { name, website_url, type, display_order } = req.body;
   if (!name) return res.status(400).json({ error: 'Name is required.' });
   try {
@@ -32,7 +32,7 @@ router.post('/', authenticate, uploadImage.single('logo'), async (req, res) => {
   }
 });
 
-router.put('/:id', authenticate, uploadImage.single('logo'), async (req, res) => {
+router.put('/:id', authenticate, uploadImage.single('logo'), cloudinaryUpload, async (req, res) => {
   const { name, website_url, type, display_order, active } = req.body;
   try {
     const logoUrl = req.file ? req.file.path : undefined;

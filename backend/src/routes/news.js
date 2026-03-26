@@ -1,7 +1,7 @@
 const express = require('express');
 const { query } = require('../db');
 const { authenticate } = require('../middleware/auth');
-const { uploadImage } = require('../middleware/upload');
+const { uploadImage, cloudinaryUpload } = require('../middleware/upload');
 
 const router = express.Router();
 
@@ -39,7 +39,7 @@ router.get('/:slug', async (req, res) => {
 });
 
 // POST /api/news (admin)
-router.post('/', authenticate, uploadImage.single('image'), async (req, res) => {
+router.post('/', authenticate, uploadImage.single('image'), cloudinaryUpload, async (req, res) => {
   const { title, excerpt, body, author, published, featured } = req.body;
   if (!title) return res.status(400).json({ error: 'Title is required.' });
   try {
@@ -57,7 +57,7 @@ router.post('/', authenticate, uploadImage.single('image'), async (req, res) => 
 });
 
 // PUT /api/news/:id (admin)
-router.put('/:id', authenticate, uploadImage.single('image'), async (req, res) => {
+router.put('/:id', authenticate, uploadImage.single('image'), cloudinaryUpload, async (req, res) => {
   const { title, excerpt, body, author, published, featured } = req.body;
   try {
     const imageUrl = req.file ? req.file.path : undefined;

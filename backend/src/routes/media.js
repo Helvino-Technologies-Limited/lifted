@@ -1,7 +1,7 @@
 const express = require('express');
 const { query } = require('../db');
 const { authenticate } = require('../middleware/auth');
-const { uploadMedia, cloudinary } = require('../middleware/upload');
+const { uploadMedia, cloudinaryUpload, cloudinary } = require('../middleware/upload');
 
 const router = express.Router();
 
@@ -25,7 +25,7 @@ router.get('/', async (req, res) => {
 });
 
 // POST /api/media/upload — upload media (admin)
-router.post('/upload', authenticate, uploadMedia.single('file'), async (req, res) => {
+router.post('/upload', authenticate, uploadMedia.single('file'), cloudinaryUpload, async (req, res) => {
   if (!req.file) return res.status(400).json({ error: 'No file uploaded.' });
 
   const { alt_text, caption, category, page: pageName, display_order } = req.body;
