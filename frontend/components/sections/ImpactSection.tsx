@@ -1,0 +1,87 @@
+'use client'
+import Image from 'next/image'
+import Link from 'next/link'
+import { useQuery } from '@tanstack/react-query'
+import { fetchSettings } from '@/lib/api'
+import { CheckCircle } from 'lucide-react'
+
+const IMPACT_IMAGES = [
+  { src: 'https://images.unsplash.com/photo-1497486751825-1233686d5d80?w=600&q=80', alt: 'Children learning in school' },
+  { src: 'https://images.unsplash.com/photo-1529390079861-591de354faf5?w=600&q=80', alt: 'Happy pupils' },
+  { src: 'https://images.unsplash.com/photo-1509062522246-3755977927d7?w=600&q=80', alt: 'Community members' },
+  { src: 'https://images.unsplash.com/photo-1542810634-71277d95dcbb?w=600&q=80', alt: 'Children playing' },
+]
+
+const highlights = [
+  'Partnering directly with public primary and junior schools',
+  'Providing scholarships that change the trajectory of young lives',
+  'Equipping youth with hands-on technical and vocational skills',
+  'Ensuring elderly citizens live in dignity and comfort',
+  'Building lasting institutional legacies for future generations',
+]
+
+export default function ImpactSection() {
+  const { data: settings = {} } = useQuery({ queryKey: ['settings'], queryFn: fetchSettings })
+
+  return (
+    <section className="py-24 bg-[var(--gold-pale)]">
+      <div className="max-w-7xl mx-auto px-4">
+        <div className="grid lg:grid-cols-2 gap-16 items-center">
+          {/* Images collage */}
+          <div className="relative">
+            <div className="grid grid-cols-2 gap-4">
+              {IMPACT_IMAGES.map((img, i) => (
+                <div
+                  key={img.src}
+                  className={`relative overflow-hidden rounded-2xl shadow-lg ${i === 0 ? 'row-span-1 h-56' : i === 1 ? 'h-40' : i === 2 ? 'h-40' : 'h-56'}`}
+                  style={{ transform: i % 2 === 1 ? 'translateY(20px)' : 'translateY(0)' }}
+                >
+                  <Image
+                    src={img.src}
+                    alt={img.alt}
+                    fill
+                    className="object-cover hover:scale-105 transition-transform duration-700"
+                    sizes="(max-width: 768px) 50vw, 25vw"
+                  />
+                </div>
+              ))}
+            </div>
+            {/* Floating badge */}
+            <div className="absolute -bottom-6 -right-4 bg-[var(--navy)] text-white p-5 rounded-2xl shadow-2xl">
+              <div className="text-3xl font-black text-[var(--gold)]">5+</div>
+              <div className="text-xs uppercase tracking-wider mt-1">Years of Service</div>
+            </div>
+          </div>
+
+          {/* Text content */}
+          <div>
+            <span className="text-[var(--gold)] font-bold text-sm uppercase tracking-widest">Our Story</span>
+            <h2 className="text-4xl md:text-5xl font-black text-[var(--navy)] mt-2 mb-6 leading-tight">
+              Transforming Communities,<br />
+              <span className="text-gradient">One Life at a Time</span>
+            </h2>
+            <p className="text-gray-600 leading-relaxed mb-6 text-lg">
+              {settings.about_story || 'LIFTED TO LIFT was founded on the belief that every individual who has been blessed with opportunities has a responsibility to lift others. Our journey began in the heart of Kenya, driven by a vision of transformed communities.'}
+            </p>
+            <ul className="space-y-3 mb-8">
+              {highlights.map((item) => (
+                <li key={item} className="flex items-start gap-3">
+                  <CheckCircle size={18} className="text-[var(--gold)] mt-0.5 shrink-0" />
+                  <span className="text-gray-600 text-sm">{item}</span>
+                </li>
+              ))}
+            </ul>
+            <div className="flex gap-4 flex-wrap">
+              <Link href="/about" className="btn-primary px-6 py-3 rounded-full font-bold">
+                Our Full Story
+              </Link>
+              <Link href="/programs" className="border-2 border-[var(--navy)] text-[var(--navy)] px-6 py-3 rounded-full font-bold hover:bg-[var(--navy)] hover:text-white transition-all">
+                Our Programs
+              </Link>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  )
+}

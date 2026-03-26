@@ -1,0 +1,179 @@
+'use client'
+import { useState } from 'react'
+import AdminLayout from '@/components/admin/AdminLayout'
+import { useQuery, useQueryClient } from '@tanstack/react-query'
+import { fetchPageContent, adminBulkUpdateContent } from '@/lib/api'
+import toast from 'react-hot-toast'
+import { Save, ChevronDown, ChevronUp } from 'lucide-react'
+
+const PAGE_SECTIONS = [
+  {
+    page: 'home',
+    label: 'Home Page',
+    sections: [
+      { section: 'hero', label: 'Hero Section', fields: ['title', 'subtitle', 'cta_primary', 'cta_secondary'] },
+      { section: 'impact', label: 'Impact Section', fields: ['title', 'description'] },
+    ],
+  },
+  {
+    page: 'about',
+    label: 'About Page',
+    sections: [
+      { section: 'mission', label: 'Mission', fields: ['title', 'body'] },
+      { section: 'vision', label: 'Vision', fields: ['title', 'body'] },
+      { section: 'values', label: 'Values', fields: ['title'] },
+    ],
+  },
+  {
+    page: 'programs',
+    label: 'Programs Page',
+    sections: [
+      { section: 'header', label: 'Page Header', fields: ['title', 'subtitle'] },
+      { section: 'pillar1', label: 'Pillar 1: Educational Equity', fields: ['title', 'body'] },
+      { section: 'pillar2', label: 'Pillar 2: Youth Empowerment', fields: ['title', 'body'] },
+      { section: 'pillar3', label: "Pillar 3: Senior Citizens' Welfare", fields: ['title', 'body'] },
+      { section: 'pillar4', label: 'Pillar 4: Institutional Stewardship', fields: ['title', 'body'] },
+      { section: 'pillar5', label: 'Pillar 5: Partnerships & Networking', fields: ['title', 'body'] },
+    ],
+  },
+  {
+    page: 'contact',
+    label: 'Contact Page',
+    sections: [
+      { section: 'header', label: 'Page Header', fields: ['title', 'subtitle'] },
+    ],
+  },
+]
+
+function SectionEditor({ page, section, label, fields }: {
+  page: string
+  section: string
+  label: string
+  fields: string[]
+}) {
+  const qc = useQueryClient()
+  const { data: content = {} } = useQuery({
+    queryKey: ['content', page],
+    queryFn: () => fetchPageContent(page),
+  })
+  const [expanded, setExpanded] = useState(false)
+  const [form, setForm] = useState<Record<string, string>>({})
+  const [saving, setSaving] = useState(false)
+
+  const val = (f: string) => form[f] ?? content?.[section]?.[f] ?? ''
+
+  const handleSave = async () => {
+    const updates = fields.map((field) => ({
+      page, section, field, content: form[field] ?? content?.[section]?.[field] ?? '',
+    }))
+    setSaving(true)
+    try {
+      await adminBulkUpdateContent(updates)
+      qc.invalidateQueries({ queryKey: ['content', page] })
+      setForm({})
+      toast.success(`${label} saved!`)
+    } catch {
+      toast.error('Failed to save.')
+    } finally {
+      setSaving(false)
+    }
+  }
+
+  return (
+    <div className="border border-gray-200 rounded-xl overflow-hidden">
+      <button
+        onClick={() => setExpanded(!expanded)}
+        className="w-full flex items-center justify-between px-5 py-4 bg-gray-50 hover:bg-[var(--gold-pale)] transition-colors text-left"
+      >
+        <span className="font-semibold text-[var(--navy)] text-sm">{label}</span>
+        {expanded ? <ChevronUp size={16} className="text-gray-400" /> : <ChevronDown size={16} className="text-gray-400" />}
+      </button>
+      {expanded && (
+        <div className="p-5 space-y-4">
+          {fields.map((field) => {
+            const isLong = field === 'body' || field === 'subtitle' || field === 'description'
+            return (
+              <div key={field}>
+                <label className="text-xs font-bold text-gray-500 uppercase tracking-wider block mb-2">
+                  {field.replace(/_/g, ' ')}
+                </label>
+                {isLong ? (
+                  <textarea
+                    rows={4}
+                    value={val(field)}
+                    onChange={(e) => setForm((f) => ({ ...f, [field]: e.target.value }))}
+                    className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:border-[var(--gold)] text-sm resize-none"
+                  />
+                ) : (
+                  <input
+                    type="text"
+                    value={val(field)}
+                    onChange={(e) => setForm((f) => ({ ...f, [field]: e.target.value }))}
+                    className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:border-[var(--gold)] text-sm"
+                  />
+                )}
+              </div>
+            )
+          })}
+          <button
+            onClick={handleSave}
+            disabled={saving}
+            className="btn-primary px-5 py-2.5 rounded-xl font-bold text-sm flex items-center gap-2 disabled:opacity-50"
+          >
+            {saving ? <div className="w-4 h-4 border-2 border-[var(--navy)]/30 border-t-[var(--navy)] rounded-full animate-spin" /> : <Save size={14} />}
+            Save Section
+          </button>
+        </div>
+      )}
+    </div>
+  )
+}
+
+export default function AdminContent() {
+  const [activePage, setActivePage] = useState('home')
+  const activePageData = PAGE_SECTIONS.find((p) => p.page === activePage)
+
+  return (
+    <AdminLayout>
+      <div className="max-w-3xl space-y-6">
+        <div>
+          <h2 className="text-2xl font-black text-[var(--navy)]">Page Content</h2>
+          <p className="text-gray-500 text-sm mt-1">Edit text content for every section of the website. Changes are saved and take effect immediately.</p>
+        </div>
+
+        {/* Page tabs */}
+        <div className="flex gap-2 flex-wrap">
+          {PAGE_SECTIONS.map(({ page, label }) => (
+            <button
+              key={page}
+              onClick={() => setActivePage(page)}
+              className={`px-4 py-2 rounded-full text-sm font-semibold transition-all ${activePage === page ? 'bg-[var(--navy)] text-white' : 'bg-white border border-gray-200 text-gray-600 hover:border-[var(--gold)]'}`}
+            >
+              {label}
+            </button>
+          ))}
+        </div>
+
+        {/* Sections */}
+        {activePageData && (
+          <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
+            <div className="p-5 border-b border-gray-100 bg-[var(--gold-pale)]">
+              <h3 className="font-black text-[var(--navy)]">{activePageData.label}</h3>
+            </div>
+            <div className="p-5 space-y-3">
+              {activePageData.sections.map(({ section, label, fields }) => (
+                <SectionEditor
+                  key={section}
+                  page={activePage}
+                  section={section}
+                  label={label}
+                  fields={fields}
+                />
+              ))}
+            </div>
+          </div>
+        )}
+      </div>
+    </AdminLayout>
+  )
+}

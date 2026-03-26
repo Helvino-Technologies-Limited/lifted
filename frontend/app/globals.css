@@ -1,0 +1,169 @@
+@import "tailwindcss";
+
+:root {
+  --navy: #1a2f5a;
+  --navy-dark: #0f1e3d;
+  --navy-light: #2a4080;
+  --gold: #c8932a;
+  --gold-light: #e8b84b;
+  --gold-pale: #fdf3e0;
+  --cream: #fdfaf4;
+  --orange: #e0621e;
+  --green: #2d7a4e;
+  --text-dark: #1a1a2e;
+  --text-mid: #4a5568;
+}
+
+@theme inline {
+  --color-background: var(--cream);
+  --color-foreground: var(--text-dark);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--cream);
+  color: var(--text-dark);
+  font-family: var(--font-geist-sans, Arial, Helvetica, sans-serif);
+  overflow-x: hidden;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: #f0f0f0; }
+::-webkit-scrollbar-thumb { background: var(--gold); border-radius: 3px; }
+
+/* Selection */
+::selection { background: var(--gold-light); color: var(--navy-dark); }
+
+/* Smooth transitions */
+* { transition: color 0.2s, background-color 0.2s, border-color 0.2s, opacity 0.2s; }
+
+/* Hero video overlay */
+.hero-overlay {
+  background: linear-gradient(
+    135deg,
+    rgba(15, 30, 61, 0.88) 0%,
+    rgba(26, 47, 90, 0.75) 50%,
+    rgba(200, 147, 42, 0.25) 100%
+  );
+}
+
+/* Section background alternation */
+.section-cream { background: var(--cream); }
+.section-white { background: #ffffff; }
+.section-navy { background: var(--navy); color: white; }
+.section-gold-pale { background: var(--gold-pale); }
+
+/* Pillar card gradient bars */
+.pillar-1 { background: linear-gradient(135deg, #1a2f5a, #2a4080); }
+.pillar-2 { background: linear-gradient(135deg, #c8932a, #e8b84b); }
+.pillar-3 { background: linear-gradient(135deg, #2d7a4e, #3d9a60); }
+.pillar-4 { background: linear-gradient(135deg, #6b3fa0, #8a5cbf); }
+.pillar-5 { background: linear-gradient(135deg, #e0621e, #f08030); }
+
+/* Tree connector lines for institutions */
+.tree-line::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 2px;
+  height: 40px;
+  background: var(--gold);
+  transform: translateX(-50%);
+}
+
+/* Text gradient */
+.text-gradient {
+  background: linear-gradient(135deg, var(--gold), var(--gold-light));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.text-gradient-navy {
+  background: linear-gradient(135deg, var(--navy), var(--navy-light));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Button hover effects */
+.btn-primary {
+  background: linear-gradient(135deg, var(--gold), var(--gold-light));
+  color: var(--navy-dark);
+  font-weight: 700;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(200, 147, 42, 0.3);
+}
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(200, 147, 42, 0.5);
+}
+
+.btn-outline-white {
+  border: 2px solid white;
+  color: white;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+.btn-outline-white:hover {
+  background: white;
+  color: var(--navy-dark);
+  transform: translateY(-2px);
+}
+
+/* Card hover */
+.card-hover {
+  transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.card-hover:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.12);
+}
+
+/* Admin sidebar */
+.admin-sidebar {
+  background: linear-gradient(180deg, var(--navy-dark) 0%, var(--navy) 100%);
+}
+
+/* Rich text content */
+.rich-content h1, .rich-content h2, .rich-content h3 { color: var(--navy); margin-bottom: 0.5em; }
+.rich-content p { margin-bottom: 1em; line-height: 1.7; }
+.rich-content ul { list-style: disc; padding-left: 1.5em; margin-bottom: 1em; }
+
+/* Image aspect ratios */
+.aspect-card { aspect-ratio: 4/3; }
+.aspect-portrait { aspect-ratio: 3/4; }
+.aspect-wide { aspect-ratio: 16/9; }
+
+/* Animations */
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-12px); }
+}
+@keyframes pulse-gold {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(200, 147, 42, 0.4); }
+  50% { box-shadow: 0 0 0 12px rgba(200, 147, 42, 0); }
+}
+
+.animate-float { animation: float 6s ease-in-out infinite; }
+.animate-pulse-gold { animation: pulse-gold 2s ease-in-out infinite; }
+
+/* Number counter animation */
+.stat-number {
+  font-variant-numeric: tabular-nums;
+}
