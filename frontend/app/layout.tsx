@@ -14,6 +14,7 @@ const geistMono = Geist_Mono({
 })
 
 export const metadata: Metadata = {
+  metadataBase: new URL('https://liftedtolift.org'),
   title: {
     default: 'LIFTED TO LIFT | Blessed to be a Blessing',
     template: '%s | LIFTED TO LIFT',
@@ -25,6 +26,11 @@ export const metadata: Metadata = {
     title: 'LIFTED TO LIFT — Blessed to be a Blessing',
     description: 'A legacy of transformed individuals lifting others.',
     type: 'website',
+    url: 'https://liftedtolift.org',
+    siteName: 'LIFTED TO LIFT',
+  },
+  alternates: {
+    canonical: 'https://liftedtolift.org',
   },
 }
 

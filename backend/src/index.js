@@ -24,6 +24,8 @@ const allowedOrigins = [
   process.env.FRONTEND_URL || 'http://localhost:3000',
   'http://localhost:3000',
   'https://liftedtolift.vercel.app',
+  'https://liftedtolift.org',
+  'https://www.liftedtolift.org',
   /\.vercel\.app$/,
 ];
 app.use(cors({
