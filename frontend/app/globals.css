@@ -4,10 +4,10 @@
   --navy: #1a2f5a;
   --navy-dark: #0f1e3d;
   --navy-light: #2a4080;
-  --gold: #c8932a;
-  --gold-light: #e8b84b;
-  --gold-pale: #fdf3e0;
-  --cream: #fdfaf4;
+  --gold: #2d7a4e;
+  --gold-light: #3d9a60;
+  --gold-pale: #e8f5ee;
+  --cream: #f5fbf7;
   --orange: #e0621e;
   --green: #2d7a4e;
   --text-dark: #1a1a2e;
@@ -49,7 +49,7 @@ body {
     135deg,
     rgba(15, 30, 61, 0.88) 0%,
     rgba(26, 47, 90, 0.75) 50%,
-    rgba(200, 147, 42, 0.25) 100%
+    rgba(45, 122, 78, 0.3) 100%
   );
 }
 
@@ -96,14 +96,14 @@ body {
 /* Button hover effects */
 .btn-primary {
   background: linear-gradient(135deg, var(--gold), var(--gold-light));
-  color: var(--navy-dark);
+  color: white;
   font-weight: 700;
   transition: all 0.3s ease;
-  box-shadow: 0 4px 15px rgba(200, 147, 42, 0.3);
+  box-shadow: 0 4px 15px rgba(45, 122, 78, 0.3);
 }
 .btn-primary:hover {
   transform: translateY(-2px);
-  box-shadow: 0 8px 25px rgba(200, 147, 42, 0.5);
+  box-shadow: 0 8px 25px rgba(45, 122, 78, 0.5);
 }
 
 .btn-outline-white {
@@ -156,8 +156,8 @@ body {
   50% { transform: translateY(-12px); }
 }
 @keyframes pulse-gold {
-  0%, 100% { box-shadow: 0 0 0 0 rgba(200, 147, 42, 0.4); }
-  50% { box-shadow: 0 0 0 12px rgba(200, 147, 42, 0); }
+  0%, 100% { box-shadow: 0 0 0 0 rgba(45, 122, 78, 0.4); }
+  50% { box-shadow: 0 0 0 12px rgba(45, 122, 78, 0); }
 }
 
 .animate-float { animation: float 6s ease-in-out infinite; }
