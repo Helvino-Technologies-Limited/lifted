@@ -9,7 +9,7 @@ const PILLARS = [
   {
     key: 'pillar1',
     icon: GraduationCap,
-    gradient: 'from-[#1a2f5a] to-[#2a4080]',
+    gradient: 'from-[#87ceeb] to-[#b0e0f5]',
     accentColor: '#c8932a',
     image: 'https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=600&q=80',
     defaultTitle: 'Educational Equity & Scholarships',
@@ -20,7 +20,7 @@ const PILLARS = [
     key: 'pillar2',
     icon: Zap,
     gradient: 'from-[#c8932a] to-[#e8b84b]',
-    accentColor: '#1a2f5a',
+    accentColor: '#87ceeb',
     image: 'https://images.unsplash.com/photo-1552664730-d307ca884978?w=600&q=80',
     defaultTitle: 'Youth Empowerment',
     defaultBody: 'Equipping unemployed youth who faced educational barriers with practical, technical skills to foster self-reliance and employability.',
