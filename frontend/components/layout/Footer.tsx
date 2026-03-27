@@ -87,6 +87,7 @@ export default function Footer() {
                 { label: 'Our Pillars', href: '/programs' },
                 { label: 'Gallery', href: '/gallery' },
                 { label: 'News & Stories', href: '/news' },
+                { label: 'Donate', href: '/donate' },
                 { label: 'Contact', href: '/contact' },
               ].map(({ label, href }) => (
                 <li key={href}>

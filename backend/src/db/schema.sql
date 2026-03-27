@@ -166,7 +166,21 @@ INSERT INTO site_settings (key, value, label, category) VALUES
   ('stats_youth_trained', '200+', 'Stat: Youth Trained', 'stats'),
   ('stats_seniors_supported', '150+', 'Stat: Seniors Supported', 'stats'),
   ('about_story', 'LIFTED TO LIFT was founded on the belief that every individual who has been blessed with opportunities has a responsibility to lift others. Our journey began in the heart of Kenya, driven by a vision of transformed communities where education, empowerment, and dignity are accessible to all.', 'About Story', 'about'),
-  ('footer_text', 'Dedicated to lifting lives and building a legacy of hope across communities.', 'Footer Text', 'general')
+  ('footer_text', 'Dedicated to lifting lives and building a legacy of hope across communities.', 'Footer Text', 'general'),
+  -- Donation / Payment Details
+  ('donation_page_title', 'Support Our Mission', 'Donation Page Title', 'donation'),
+  ('donation_page_subtitle', 'Your generosity transforms lives. Every contribution, big or small, helps us lift communities across Kenya.', 'Donation Page Subtitle', 'donation'),
+  ('donation_page_message', '', 'Donation Custom Message', 'donation'),
+  ('donation_mpesa_paybill', '', 'M-Pesa Paybill Number', 'donation'),
+  ('donation_mpesa_account', '', 'M-Pesa Account Name', 'donation'),
+  ('donation_mpesa_till', '', 'M-Pesa Till Number (Buy Goods)', 'donation'),
+  ('donation_mpesa_name', 'LIFTED TO LIFT', 'M-Pesa Registered Name', 'donation'),
+  ('donation_bank_name', '', 'Bank Name', 'donation'),
+  ('donation_bank_branch', '', 'Bank Branch', 'donation'),
+  ('donation_bank_account_name', '', 'Bank Account Name', 'donation'),
+  ('donation_bank_account_number', '', 'Bank Account Number', 'donation'),
+  ('donation_bank_swift', '', 'SWIFT / BIC Code (International)', 'donation'),
+  ('donation_paypal_link', '', 'PayPal.me Link or Email', 'donation')
 ON CONFLICT (key) DO NOTHING;
 
 -- Default page content
