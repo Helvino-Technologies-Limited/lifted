@@ -39,6 +39,10 @@ export const fetchTeam = () => api.get('/api/team').then((r) => r.data)
 export const fetchInstitutions = () => api.get('/api/institutions').then((r) => r.data)
 export const fetchNews = (params?: Record<string, string>) =>
   api.get('/api/news', { params }).then((r) => r.data)
+export const fetchNewsBySlug = (slug: string) =>
+  api.get(`/api/news/${slug}`).then((r) => r.data)
+export const fetchNewsletters = (params?: Record<string, string>) =>
+  api.get('/api/newsletters', { params }).then((r) => r.data)
 export const fetchPartners = () => api.get('/api/partners').then((r) => r.data)
 
 // ---- Admin API calls ----
@@ -64,6 +68,13 @@ export const adminUploadMedia = (formData: FormData) =>
 
 export const adminDeleteMedia = (id: number) =>
   api.delete(`/api/media/${id}`).then((r) => r.data)
+
+export const adminCreateNewsletter = (formData: FormData) =>
+  api.post('/api/newsletters', formData, { headers: { 'Content-Type': 'multipart/form-data' } }).then((r) => r.data)
+export const adminUpdateNewsletter = (id: number, formData: FormData) =>
+  api.put(`/api/newsletters/${id}`, formData, { headers: { 'Content-Type': 'multipart/form-data' } }).then((r) => r.data)
+export const adminDeleteNewsletter = (id: number) =>
+  api.delete(`/api/newsletters/${id}`).then((r) => r.data)
 
 export const adminUpdateMedia = (id: number, data: Record<string, unknown>) =>
   api.put(`/api/media/${id}`, data).then((r) => r.data)

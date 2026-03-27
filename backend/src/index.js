@@ -11,6 +11,7 @@ const mediaRoutes = require('./routes/media');
 const teamRoutes = require('./routes/team');
 const institutionsRoutes = require('./routes/institutions');
 const newsRoutes = require('./routes/news');
+const newslettersRoutes = require('./routes/newsletters');
 const partnersRoutes = require('./routes/partners');
 
 const app = express();
@@ -60,6 +61,7 @@ app.use('/api/media', mediaRoutes);
 app.use('/api/team', teamRoutes);
 app.use('/api/institutions', institutionsRoutes);
 app.use('/api/news', newsRoutes);
+app.use('/api/newsletters', newslettersRoutes);
 app.use('/api/partners', partnersRoutes);
 
 // 404

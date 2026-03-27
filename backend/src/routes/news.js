@@ -40,15 +40,15 @@ router.get('/:slug', async (req, res) => {
 
 // POST /api/news (admin)
 router.post('/', authenticate, uploadImage.single('image'), cloudinaryUpload, async (req, res) => {
-  const { title, excerpt, body, author, published, featured } = req.body;
+  const { title, excerpt, body, author, published, featured, video_url } = req.body;
   if (!title) return res.status(400).json({ error: 'Title is required.' });
   try {
     const slug = slugify(title) + '-' + Date.now();
     const imageUrl = req.file ? req.file.path : null;
     const result = await query(
-      `INSERT INTO news (title, slug, excerpt, body, image_url, author, published, featured)
-       VALUES ($1,$2,$3,$4,$5,$6,$7,$8) RETURNING *`,
-      [title, slug, excerpt, body, imageUrl, author || 'LIFTED TO LIFT', published === 'true', featured === 'true']
+      `INSERT INTO news (title, slug, excerpt, body, image_url, video_url, author, published, featured)
+       VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9) RETURNING *`,
+      [title, slug, excerpt, body, imageUrl, video_url || null, author || 'LIFTED TO LIFT', published === 'true', featured === 'true']
     );
     res.json(result.rows[0]);
   } catch (err) {
@@ -58,7 +58,7 @@ router.post('/', authenticate, uploadImage.single('image'), cloudinaryUpload, as
 
 // PUT /api/news/:id (admin)
 router.put('/:id', authenticate, uploadImage.single('image'), cloudinaryUpload, async (req, res) => {
-  const { title, excerpt, body, author, published, featured } = req.body;
+  const { title, excerpt, body, author, published, featured, video_url } = req.body;
   try {
     const imageUrl = req.file ? req.file.path : undefined;
     const result = await query(
@@ -67,12 +67,15 @@ router.put('/:id', authenticate, uploadImage.single('image'), cloudinaryUpload, 
         excerpt = COALESCE($2, excerpt),
         body = COALESCE($3, body),
         image_url = COALESCE($4, image_url),
-        author = COALESCE($5, author),
-        published = COALESCE($6, published),
-        featured = COALESCE($7, featured),
+        video_url = COALESCE($5, video_url),
+        author = COALESCE($6, author),
+        published = COALESCE($7, published),
+        featured = COALESCE($8, featured),
         updated_at = NOW()
-       WHERE id = $8 RETURNING *`,
-      [title, excerpt, body, imageUrl, author,
+       WHERE id = $9 RETURNING *`,
+      [title, excerpt, body, imageUrl,
+       video_url !== undefined ? (video_url || null) : undefined,
+       author,
        published !== undefined ? published === 'true' : undefined,
        featured !== undefined ? featured === 'true' : undefined,
        req.params.id]

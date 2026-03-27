@@ -8,7 +8,7 @@ import toast from 'react-hot-toast'
 import {
   LayoutDashboard, FileText, Image as ImageIcon, Users,
   Settings, LogOut, Menu, X, Building2, Newspaper,
-  ExternalLink, ChevronRight, Globe
+  ExternalLink, ChevronRight, Globe, BookOpen
 } from 'lucide-react'
 
 const NAV_ITEMS = [
@@ -19,6 +19,7 @@ const NAV_ITEMS = [
   { label: 'Team Members', href: '/admin/team', icon: Users },
   { label: 'Institutions', href: '/admin/institutions', icon: Building2 },
   { label: 'News & Stories', href: '/admin/news', icon: Newspaper },
+  { label: 'Newsletters', href: '/admin/newsletters', icon: BookOpen },
   { label: 'Contact & Settings', href: '/admin/settings', icon: Settings },
 ]
 

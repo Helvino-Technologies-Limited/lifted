@@ -73,9 +73,25 @@ CREATE TABLE IF NOT EXISTS news (
   excerpt TEXT,
   body TEXT,
   image_url TEXT,
+  video_url TEXT,
   author VARCHAR(255) DEFAULT 'LIFTED TO LIFT',
   published BOOLEAN DEFAULT FALSE,
   featured BOOLEAN DEFAULT FALSE,
+  created_at TIMESTAMP DEFAULT NOW(),
+  updated_at TIMESTAMP DEFAULT NOW()
+);
+
+-- Migrate existing news table (safe on re-run)
+ALTER TABLE news ADD COLUMN IF NOT EXISTS video_url TEXT;
+
+-- Newsletters
+CREATE TABLE IF NOT EXISTS newsletters (
+  id SERIAL PRIMARY KEY,
+  title TEXT NOT NULL,
+  description TEXT,
+  file_url TEXT,
+  cover_image_url TEXT,
+  published BOOLEAN DEFAULT FALSE,
   created_at TIMESTAMP DEFAULT NOW(),
   updated_at TIMESTAMP DEFAULT NOW()
 );
