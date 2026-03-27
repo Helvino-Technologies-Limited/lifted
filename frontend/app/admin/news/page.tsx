@@ -4,7 +4,7 @@ import AdminLayout from '@/components/admin/AdminLayout'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { fetchNews, adminUploadMedia, api } from '@/lib/api'
 import toast from 'react-hot-toast'
-import { Plus, Trash2, Edit2, X, Check, Upload, Eye, EyeOff, Youtube, Video } from 'lucide-react'
+import { Plus, Trash2, Edit2, X, Check, Upload, Eye, EyeOff, Link2, Video } from 'lucide-react'
 import { formatDate } from '@/lib/utils'
 
 type NewsItem = {
@@ -219,7 +219,7 @@ export default function AdminNews() {
                   <p className="text-sm font-semibold text-[var(--navy)] flex items-center gap-2"><Video size={14} /> Video (optional)</p>
 
                   <div>
-                    <label className="text-xs text-gray-500 block mb-1.5 flex items-center gap-1"><Youtube size={12} /> Paste YouTube URL</label>
+                    <label className="text-xs text-gray-500 block mb-1.5 flex items-center gap-1"><Link2 size={12} /> Paste YouTube URL</label>
                     <input
                       type="url"
                       value={form.video_url || ''}
