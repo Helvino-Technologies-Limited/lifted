@@ -2,10 +2,10 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import { useQuery } from '@tanstack/react-query'
-import { fetchSettings } from '@/lib/api'
+import { fetchSettings, fetchPageContent } from '@/lib/api'
 import { CheckCircle } from 'lucide-react'
 
-const IMPACT_IMAGES = [
+const DEFAULT_IMPACT_IMAGES = [
   { src: 'https://images.unsplash.com/photo-1497486751825-1233686d5d80?w=600&q=80', alt: 'Children learning in school' },
   { src: 'https://images.unsplash.com/photo-1529390079861-591de354faf5?w=600&q=80', alt: 'Happy pupils' },
   { src: 'https://images.unsplash.com/photo-1509062522246-3755977927d7?w=600&q=80', alt: 'Community members' },
@@ -22,6 +22,15 @@ const highlights = [
 
 export default function ImpactSection() {
   const { data: settings = {} } = useQuery({ queryKey: ['settings'], queryFn: fetchSettings })
+  const { data: homeContent = {} } = useQuery({
+    queryKey: ['content', 'home'],
+    queryFn: () => fetchPageContent('home'),
+  })
+
+  const storyImages = DEFAULT_IMPACT_IMAGES.map((def, i) => ({
+    src: (homeContent as Record<string, Record<string, string>>)?.story_images?.[`image${i + 1}`] || def.src,
+    alt: def.alt,
+  }))
 
   return (
     <section className="py-24 bg-[var(--gold-pale)]">
@@ -30,9 +39,9 @@ export default function ImpactSection() {
           {/* Images collage */}
           <div className="relative">
             <div className="grid grid-cols-2 gap-4">
-              {IMPACT_IMAGES.map((img, i) => (
+              {storyImages.map((img, i) => (
                 <div
-                  key={img.src}
+                  key={i}
                   className={`relative overflow-hidden rounded-2xl shadow-lg ${i === 0 ? 'row-span-1 h-56' : i === 1 ? 'h-40' : i === 2 ? 'h-40' : 'h-56'}`}
                   style={{ transform: i % 2 === 1 ? 'translateY(20px)' : 'translateY(0)' }}
                 >
@@ -45,11 +54,6 @@ export default function ImpactSection() {
                   />
                 </div>
               ))}
-            </div>
-            {/* Floating badge */}
-            <div className="absolute -bottom-6 -right-4 bg-[var(--navy)] text-white p-5 rounded-2xl shadow-2xl">
-              <div className="text-3xl font-black text-[var(--gold)]">5+</div>
-              <div className="text-xs uppercase tracking-wider mt-1">Years of Service</div>
             </div>
           </div>
 

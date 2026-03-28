@@ -84,6 +84,7 @@ export default function PillarsOverview() {
             const Icon = pillar.icon
             const title = content?.[pillar.key]?.title || pillar.defaultTitle
             const body = content?.[pillar.key]?.body || pillar.defaultBody
+            const imageSrc = (content as Record<string, Record<string, string>>)?.[pillar.key]?.image || pillar.image
 
             return (
               <div
@@ -93,7 +94,7 @@ export default function PillarsOverview() {
                 {/* Image */}
                 <div className="relative h-52 overflow-hidden">
                   <Image
-                    src={pillar.image}
+                    src={imageSrc}
                     alt={title}
                     fill
                     className="object-cover group-hover:scale-105 transition-transform duration-500"
