@@ -6,7 +6,7 @@ import { useQuery } from '@tanstack/react-query'
 import { fetchSettings, fetchPageContent } from '@/lib/api'
 import { ChevronDown, Play, Pause } from 'lucide-react'
 
-const FALLBACK_IMAGES = [
+const DEFAULT_BG_IMAGES = [
   'https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?w=1600&q=80',
   'https://images.unsplash.com/photo-1542810634-71277d95dcbb?w=1600&q=80',
   'https://images.unsplash.com/photo-1511632765486-a01980e01a18?w=1600&q=80',
@@ -23,12 +23,19 @@ export default function HeroSection() {
   const videoUrl = settings.hero_video_url || ''
   const logoUrl = settings.hero_logo_url || ''
 
+  const heroBgContent = (content as Record<string, Record<string, string>>)?.hero_bg || {}
+  const bgImages = [
+    heroBgContent.image1 || DEFAULT_BG_IMAGES[0],
+    heroBgContent.image2 || DEFAULT_BG_IMAGES[1],
+    heroBgContent.image3 || DEFAULT_BG_IMAGES[2],
+  ]
+
   // Cycle background images when no video
   useEffect(() => {
     if (videoUrl) return
-    const timer = setInterval(() => setBgIndex((i) => (i + 1) % FALLBACK_IMAGES.length), 6000)
+    const timer = setInterval(() => setBgIndex((i) => (i + 1) % bgImages.length), 6000)
     return () => clearInterval(timer)
-  }, [videoUrl])
+  }, [videoUrl, bgImages.length])
 
   const togglePlay = () => {
     if (!videoRef.current) return
@@ -52,9 +59,9 @@ export default function HeroSection() {
         />
       ) : (
         <>
-          {FALLBACK_IMAGES.map((src, i) => (
+          {bgImages.map((src, i) => (
             <div
-              key={src}
+              key={i}
               className="absolute inset-0 transition-opacity duration-2000"
               style={{ opacity: i === bgIndex ? 1 : 0 }}
             >

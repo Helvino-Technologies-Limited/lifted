@@ -12,6 +12,7 @@ const PAGE_SECTIONS = [
     label: 'Home Page',
     sections: [
       { section: 'hero', label: 'Hero Section', fields: ['title', 'subtitle', 'cta_primary', 'cta_secondary'] },
+      { section: 'hero_bg', label: 'Hero Background Images', fields: ['image1', 'image2', 'image3'] },
       { section: 'impact', label: 'Impact Section', fields: ['title', 'description'] },
       { section: 'story_images', label: 'Our Story — Images', fields: ['image1', 'image2', 'image3', 'image4'] },
     ],
@@ -23,6 +24,7 @@ const PAGE_SECTIONS = [
       { section: 'mission', label: 'Mission', fields: ['title', 'body'] },
       { section: 'vision', label: 'Vision', fields: ['title', 'body'] },
       { section: 'values', label: 'Values', fields: ['title'] },
+      { section: 'about_images', label: 'Mission Section — Images', fields: ['image1', 'image2', 'image3', 'image4'] },
     ],
   },
   {
@@ -30,11 +32,11 @@ const PAGE_SECTIONS = [
     label: 'Programs Page',
     sections: [
       { section: 'header', label: 'Page Header', fields: ['title', 'subtitle'] },
-      { section: 'pillar1', label: 'Pillar 1: Educational Equity', fields: ['title', 'body', 'image'] },
-      { section: 'pillar2', label: 'Pillar 2: Youth Empowerment', fields: ['title', 'body', 'image'] },
-      { section: 'pillar3', label: "Pillar 3: Senior Citizens' Welfare", fields: ['title', 'body', 'image'] },
-      { section: 'pillar4', label: 'Pillar 4: Institutional Stewardship', fields: ['title', 'body', 'image'] },
-      { section: 'pillar5', label: 'Pillar 5: Partnerships & Networking', fields: ['title', 'body', 'image'] },
+      { section: 'pillar1', label: 'Pillar 1: Educational Equity', fields: ['title', 'body', 'image', 'image2'] },
+      { section: 'pillar2', label: 'Pillar 2: Youth Empowerment', fields: ['title', 'body', 'image', 'image2'] },
+      { section: 'pillar3', label: "Pillar 3: Senior Citizens' Welfare", fields: ['title', 'body', 'image', 'image2'] },
+      { section: 'pillar4', label: 'Pillar 4: Institutional Stewardship', fields: ['title', 'body', 'image', 'image2'] },
+      { section: 'pillar5', label: 'Pillar 5: Partnerships & Networking', fields: ['title', 'body', 'image', 'image2'] },
     ],
   },
   {

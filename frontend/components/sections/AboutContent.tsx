@@ -13,10 +13,20 @@ const VALUES = [
   { icon: Shield, title: 'Integrity', color: 'bg-emerald-100 text-emerald-600' },
 ]
 
+const DEFAULT_ABOUT_IMAGES = [
+  'https://images.unsplash.com/photo-1529390079861-591de354faf5?w=600&q=80',
+  'https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?w=600&q=80',
+  'https://images.unsplash.com/photo-1582213782179-e0d53f98f2ca?w=600&q=80',
+  'https://images.unsplash.com/photo-1552664730-d307ca884978?w=600&q=80',
+]
+
 export default function AboutContent() {
   const { data: settings = {} } = useQuery({ queryKey: ['settings'], queryFn: fetchSettings })
   const { data: team = [] } = useQuery({ queryKey: ['team'], queryFn: fetchTeam })
   const { data: content = {} } = useQuery({ queryKey: ['content', 'about'], queryFn: () => fetchPageContent('about') })
+
+  const aboutImgContent = (content as Record<string, Record<string, string>>)?.about_images || {}
+  const aboutImages = DEFAULT_ABOUT_IMAGES.map((def, i) => aboutImgContent[`image${i + 1}`] || def)
 
   return (
     <>
@@ -49,32 +59,16 @@ export default function AboutContent() {
 
             <div className="grid grid-cols-2 gap-4">
               <div className="relative h-72 rounded-2xl overflow-hidden shadow-xl">
-                <Image
-                  src="https://images.unsplash.com/photo-1529390079861-591de354faf5?w=600&q=80"
-                  alt="Children learning"
-                  fill className="object-cover"
-                />
+                <Image src={aboutImages[0]} alt="Mission image 1" fill className="object-cover" />
               </div>
               <div className="relative h-72 rounded-2xl overflow-hidden shadow-xl mt-8">
-                <Image
-                  src="https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?w=600&q=80"
-                  alt="Happy pupils"
-                  fill className="object-cover"
-                />
+                <Image src={aboutImages[1]} alt="Mission image 2" fill className="object-cover" />
               </div>
               <div className="relative h-48 rounded-2xl overflow-hidden shadow-xl">
-                <Image
-                  src="https://images.unsplash.com/photo-1582213782179-e0d53f98f2ca?w=600&q=80"
-                  alt="Community"
-                  fill className="object-cover"
-                />
+                <Image src={aboutImages[2]} alt="Mission image 3" fill className="object-cover" />
               </div>
               <div className="relative h-48 rounded-2xl overflow-hidden shadow-xl -mt-8">
-                <Image
-                  src="https://images.unsplash.com/photo-1552664730-d307ca884978?w=600&q=80"
-                  alt="Youth training"
-                  fill className="object-cover"
-                />
+                <Image src={aboutImages[3]} alt="Mission image 4" fill className="object-cover" />
               </div>
             </div>
           </div>

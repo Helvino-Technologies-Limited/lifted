@@ -213,8 +213,11 @@ export default function ProgramsContent() {
 
       {PILLAR_DATA.map((pillar, idx) => {
         const Icon = pillar.icon
-        const title = content?.[pillar.key]?.title || pillar.defaultTitle
-        const body = content?.[pillar.key]?.body || pillar.defaultBody
+        const pillarContent = (content as Record<string, Record<string, string>>)?.[pillar.key] || {}
+        const title = pillarContent.title || pillar.defaultTitle
+        const body = pillarContent.body || pillar.defaultBody
+        const img1 = pillarContent.image || pillar.images[0]
+        const img2 = pillarContent.image2 || pillar.images[1]
         const isEven = idx % 2 === 0
 
         return (
@@ -230,7 +233,7 @@ export default function ProgramsContent() {
                   <div className="grid grid-cols-2 gap-4">
                     <div className="relative h-72 rounded-2xl overflow-hidden shadow-xl">
                       <Image
-                        src={pillar.images[0]}
+                        src={img1}
                         alt={title}
                         fill
                         className="object-cover"
@@ -239,7 +242,7 @@ export default function ProgramsContent() {
                     </div>
                     <div className="relative h-72 rounded-2xl overflow-hidden shadow-xl mt-10">
                       <Image
-                        src={pillar.images[1]}
+                        src={img2}
                         alt={title}
                         fill
                         className="object-cover"
