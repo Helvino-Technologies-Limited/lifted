@@ -45,6 +45,15 @@ export const fetchNewsletters = (params?: Record<string, string>) =>
   api.get('/api/newsletters', { params }).then((r) => r.data)
 export const fetchPartners = () => api.get('/api/partners').then((r) => r.data)
 
+// ---- Contact Messages ----
+export const submitContactMessage = (data: { name: string; email: string; subject: string; message: string }) =>
+  api.post('/api/messages', data).then((r) => r.data)
+
+export const fetchMessages = () => api.get('/api/messages').then((r) => r.data)
+export const fetchUnreadCount = () => api.get('/api/messages/unread-count').then((r) => r.data)
+export const toggleMessageRead = (id: number) => api.patch(`/api/messages/${id}/read`).then((r) => r.data)
+export const deleteMessage = (id: number) => api.delete(`/api/messages/${id}`).then((r) => r.data)
+
 // ---- Admin API calls ----
 export const adminLogin = (username: string, password: string) =>
   api.post('/api/auth/login', { username, password }).then((r) => r.data)

@@ -6,6 +6,7 @@ import { MapPin, Phone, Mail, Send } from 'lucide-react'
 import { FacebookIcon, TwitterIcon, InstagramIcon, YoutubeIcon, LinkedinIcon } from '@/components/ui/SocialIcons'
 import PageHero from '@/components/ui/PageHero'
 import toast from 'react-hot-toast'
+import { submitContactMessage } from '@/lib/api'
 
 export default function ContactContent() {
   const { data: settings = {} } = useQuery({ queryKey: ['settings'], queryFn: fetchSettings })
@@ -21,11 +22,15 @@ export default function ContactContent() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setSubmitting(true)
-    // Simulate submission (backend can add email service)
-    await new Promise((r) => setTimeout(r, 1500))
-    toast.success("Thank you! We'll be in touch soon.")
-    setForm({ name: '', email: '', subject: '', message: '' })
-    setSubmitting(false)
+    try {
+      await submitContactMessage(form)
+      toast.success("Thank you! We'll be in touch soon.")
+      setForm({ name: '', email: '', subject: '', message: '' })
+    } catch {
+      toast.error('Failed to send message. Please try again.')
+    } finally {
+      setSubmitting(false)
+    }
   }
 
   const socials = [

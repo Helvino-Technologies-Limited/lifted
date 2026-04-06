@@ -120,6 +120,17 @@ CREATE TABLE IF NOT EXISTS partners (
   active BOOLEAN DEFAULT TRUE
 );
 
+-- Contact Messages (from public contact form)
+CREATE TABLE IF NOT EXISTS contact_messages (
+  id SERIAL PRIMARY KEY,
+  name VARCHAR(255) NOT NULL,
+  email VARCHAR(255) NOT NULL,
+  subject VARCHAR(255),
+  message TEXT NOT NULL,
+  read BOOLEAN DEFAULT FALSE,
+  created_at TIMESTAMP DEFAULT NOW()
+);
+
 -- Gallery Albums
 CREATE TABLE IF NOT EXISTS gallery_albums (
   id SERIAL PRIMARY KEY,

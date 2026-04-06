@@ -1,9 +1,9 @@
 'use client'
 import AdminLayout from '@/components/admin/AdminLayout'
 import { useQuery } from '@tanstack/react-query'
-import { fetchTeam, fetchMedia, fetchNews, fetchInstitutions } from '@/lib/api'
+import { fetchTeam, fetchMedia, fetchNews, fetchInstitutions, fetchUnreadCount } from '@/lib/api'
 import Link from 'next/link'
-import { Users, Image as ImageIcon, Newspaper, Building2, ArrowRight, Settings, FileText, Globe } from 'lucide-react'
+import { Users, Image as ImageIcon, Newspaper, Building2, ArrowRight, Settings, FileText, Globe, Inbox } from 'lucide-react'
 
 function StatCard({ icon: Icon, label, value, href, color }: {
   icon: React.ComponentType<{ size: number; className?: string }>
@@ -38,6 +38,7 @@ export default function AdminDashboard() {
   const { data: media = [] } = useQuery({ queryKey: ['media', 'all'], queryFn: () => fetchMedia() })
   const { data: news = [] } = useQuery({ queryKey: ['news', 'published'], queryFn: () => fetchNews() })
   const { data: institutions = [] } = useQuery({ queryKey: ['institutions'], queryFn: fetchInstitutions })
+  const { data: unreadData } = useQuery({ queryKey: ['messages', 'unread-count'], queryFn: fetchUnreadCount })
 
   return (
     <AdminLayout>
@@ -49,11 +50,12 @@ export default function AdminDashboard() {
         </div>
 
         {/* Stats */}
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="grid grid-cols-2 lg:grid-cols-5 gap-4">
           <StatCard icon={Users} label="Team Members" value={team.length} href="/admin/team" color="bg-gradient-to-br from-[var(--navy)] to-[var(--navy-light)]" />
           <StatCard icon={ImageIcon} label="Media Files" value={media.length} href="/admin/media" color="bg-gradient-to-br from-[var(--gold)] to-[var(--gold-light)]" />
           <StatCard icon={Newspaper} label="News Articles" value={news.length} href="/admin/news" color="bg-gradient-to-br from-[var(--green)] to-emerald-400" />
           <StatCard icon={Building2} label="Institutions" value={institutions.length} href="/admin/institutions" color="bg-gradient-to-br from-[#6b3fa0] to-[#8a5cbf]" />
+          <StatCard icon={Inbox} label="Unread Messages" value={unreadData?.count ?? 0} href="/admin/messages" color="bg-gradient-to-br from-[#0ea5e9] to-[#38bdf8]" />
         </div>
 
         {/* Quick actions */}

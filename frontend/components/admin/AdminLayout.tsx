@@ -2,13 +2,15 @@
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
+import { useQuery } from '@tanstack/react-query'
 import { isAuthenticated, removeToken } from '@/lib/auth'
+import { fetchUnreadCount } from '@/lib/api'
 import { cn } from '@/lib/utils'
 import toast from 'react-hot-toast'
 import {
   LayoutDashboard, FileText, Image as ImageIcon, Users,
   Settings, LogOut, Menu, X, Building2, Newspaper,
-  ExternalLink, ChevronRight, Globe, BookOpen, Heart
+  ExternalLink, ChevronRight, Globe, BookOpen, Heart, Inbox
 } from 'lucide-react'
 
 const NAV_ITEMS = [
@@ -21,6 +23,7 @@ const NAV_ITEMS = [
   { label: 'News & Stories', href: '/admin/news', icon: Newspaper },
   { label: 'Newsletters', href: '/admin/newsletters', icon: BookOpen },
   { label: 'Donation Page', href: '/admin/donations', icon: Heart },
+  { label: 'Messages', href: '/admin/messages', icon: Inbox },
   { label: 'Contact & Settings', href: '/admin/settings', icon: Settings },
 ]
 
@@ -36,6 +39,14 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       router.replace('/admin/login')
     }
   }, [router])
+
+  const { data: unreadData } = useQuery({
+    queryKey: ['messages', 'unread-count'],
+    queryFn: fetchUnreadCount,
+    refetchInterval: 60_000, // recheck every minute
+    enabled: mounted && isAuthenticated(),
+  })
+  const unreadCount: number = unreadData?.count ?? 0
 
   if (!mounted) return null
 
@@ -79,6 +90,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         <nav className="flex-1 py-4 overflow-y-auto">
           {NAV_ITEMS.map(({ label, href, icon: Icon }) => {
             const active = pathname === href || (href !== '/admin' && pathname.startsWith(href))
+            const showBadge = label === 'Messages' && unreadCount > 0
             return (
               <Link
                 key={href}
@@ -93,7 +105,12 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
               >
                 <Icon size={17} />
                 {label}
-                {active && <ChevronRight size={14} className="ml-auto" />}
+                {showBadge && (
+                  <span className="ml-auto bg-red-500 text-white text-[10px] font-black rounded-full min-w-[18px] h-[18px] flex items-center justify-center px-1">
+                    {unreadCount > 99 ? '99+' : unreadCount}
+                  </span>
+                )}
+                {active && !showBadge && <ChevronRight size={14} className="ml-auto" />}
               </Link>
             )
           })}
