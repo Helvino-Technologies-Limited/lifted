@@ -6,12 +6,6 @@ import { useQuery } from '@tanstack/react-query'
 import { fetchSettings, fetchPageContent } from '@/lib/api'
 import { ChevronDown, Play, Pause } from 'lucide-react'
 
-const DEFAULT_BG_IMAGES = [
-  'https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?w=1600&q=80',
-  'https://images.unsplash.com/photo-1542810634-71277d95dcbb?w=1600&q=80',
-  'https://images.unsplash.com/photo-1511632765486-a01980e01a18?w=1600&q=80',
-]
-
 export default function HeroSection() {
   const videoRef = useRef<HTMLVideoElement>(null)
   const [playing, setPlaying] = useState(true)
@@ -25,10 +19,10 @@ export default function HeroSection() {
 
   const heroBgContent = (content as Record<string, Record<string, string>>)?.hero_bg || {}
   const bgImages = [
-    heroBgContent.image1 || DEFAULT_BG_IMAGES[0],
-    heroBgContent.image2 || DEFAULT_BG_IMAGES[1],
-    heroBgContent.image3 || DEFAULT_BG_IMAGES[2],
-  ]
+    heroBgContent.image1,
+    heroBgContent.image2,
+    heroBgContent.image3,
+  ].filter(Boolean) as string[]
 
   // Cycle background images when no video
   useEffect(() => {
@@ -57,7 +51,7 @@ export default function HeroSection() {
           autoPlay muted loop playsInline
           className="absolute inset-0 w-full h-full object-cover"
         />
-      ) : (
+      ) : bgImages.length > 0 ? (
         <>
           {bgImages.map((src, i) => (
             <div
@@ -76,6 +70,8 @@ export default function HeroSection() {
             </div>
           ))}
         </>
+      ) : (
+        <div className="absolute inset-0 bg-[var(--navy-dark)]" />
       )}
 
       {/* Overlay */}

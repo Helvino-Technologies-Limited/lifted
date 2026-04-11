@@ -5,13 +5,6 @@ import { useQuery } from '@tanstack/react-query'
 import { fetchSettings, fetchPageContent } from '@/lib/api'
 import { CheckCircle } from 'lucide-react'
 
-const DEFAULT_IMPACT_IMAGES = [
-  { src: 'https://images.unsplash.com/photo-1497486751825-1233686d5d80?w=600&q=80', alt: 'Children learning in school' },
-  { src: 'https://images.unsplash.com/photo-1529390079861-591de354faf5?w=600&q=80', alt: 'Happy pupils' },
-  { src: 'https://images.unsplash.com/photo-1509062522246-3755977927d7?w=600&q=80', alt: 'Community members' },
-  { src: 'https://images.unsplash.com/photo-1542810634-71277d95dcbb?w=600&q=80', alt: 'Children playing' },
-]
-
 const highlights = [
   'Partnering directly with public primary and junior schools',
   'Providing scholarships that change the trajectory of young lives',
@@ -27,9 +20,8 @@ export default function ImpactSection() {
     queryFn: () => fetchPageContent('home'),
   })
 
-  const storyImages = DEFAULT_IMPACT_IMAGES.map((def, i) => ({
-    src: (homeContent as Record<string, Record<string, string>>)?.story_images?.[`image${i + 1}`] || def.src,
-    alt: def.alt,
+  const storyImages = [1, 2, 3, 4].map((i) => ({
+    src: (homeContent as Record<string, Record<string, string>>)?.story_images?.[`image${i}`] || null,
   }))
 
   return (
@@ -45,13 +37,17 @@ export default function ImpactSection() {
                   className={`relative overflow-hidden rounded-2xl shadow-lg ${i === 0 ? 'row-span-1 h-56' : i === 1 ? 'h-40' : i === 2 ? 'h-40' : 'h-56'}`}
                   style={{ transform: i % 2 === 1 ? 'translateY(20px)' : 'translateY(0)' }}
                 >
-                  <Image
-                    src={img.src}
-                    alt={img.alt}
-                    fill
-                    className="object-cover hover:scale-105 transition-transform duration-700"
-                    sizes="(max-width: 768px) 50vw, 25vw"
-                  />
+                  {img.src ? (
+                    <Image
+                      src={img.src}
+                      alt="Our story"
+                      fill
+                      className="object-cover hover:scale-105 transition-transform duration-700"
+                      sizes="(max-width: 768px) 50vw, 25vw"
+                    />
+                  ) : (
+                    <div className="w-full h-full bg-[var(--gold-pale)]" />
+                  )}
                 </div>
               ))}
             </div>

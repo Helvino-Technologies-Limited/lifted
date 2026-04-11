@@ -8,13 +8,6 @@ import { Calendar, ArrowRight, PlayCircle, FileText, Download } from 'lucide-rea
 import { formatDate } from '@/lib/utils'
 import PageHero from '@/components/ui/PageHero'
 
-const NEWS_PLACEHOLDER = [
-  { id: 1, title: 'New Scholarship Programme Launches for Rural Students', excerpt: 'LIFTED TO LIFT announces a groundbreaking scholarship initiative supporting 50 students from public primary schools.', image_url: 'https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=600&q=80', created_at: new Date().toISOString(), slug: '#', video_url: null },
-  { id: 2, title: 'Youth Skills Training Cohort Graduates 30 Young People', excerpt: 'Our latest youth empowerment cohort completed hands-on technical training, ready to enter the workforce.', image_url: 'https://images.unsplash.com/photo-1552664730-d307ca884978?w=600&q=80', created_at: new Date(Date.now() - 7 * 86400000).toISOString(), slug: '#', video_url: null },
-  { id: 3, title: 'Partnership to Provide Essential Resources to 12 Schools', excerpt: 'A new partnership ensures that 12 local schools receive books, stationery, and learning materials this year.', image_url: 'https://images.unsplash.com/photo-1497486751825-1233686d5d80?w=600&q=80', created_at: new Date(Date.now() - 14 * 86400000).toISOString(), slug: '#', video_url: null },
-  { id: 4, title: 'Senior Welfare Drive: Clothing and Food Distribution', excerpt: 'Our team distributed essential clothing and food packages to over 80 senior citizens in the community.', image_url: 'https://images.unsplash.com/photo-1582213782179-e0d53f98f2ca?w=600&q=80', created_at: new Date(Date.now() - 21 * 86400000).toISOString(), slug: '#', video_url: null },
-]
-
 type NewsItem = { id: number; title: string; excerpt?: string; image_url?: string; video_url?: string; created_at: string; slug: string }
 type Newsletter = { id: number; title: string; description?: string; file_url?: string; cover_image_url?: string; created_at: string }
 
@@ -31,7 +24,7 @@ export default function NewsContent() {
     queryFn: () => fetchNewsletters({ published: 'true' }),
   })
 
-  const items: NewsItem[] = news.length > 0 ? news : NEWS_PLACEHOLDER
+  const items: NewsItem[] = news
 
   return (
     <>
@@ -66,6 +59,13 @@ export default function NewsContent() {
           {/* Stories Tab */}
           {activeTab === 'stories' && (
             <>
+              {items.length === 0 && (
+                <div className="text-center py-24 text-gray-400">
+                  <Calendar size={40} className="mx-auto mb-4 opacity-30" />
+                  <p className="font-semibold text-lg">No stories yet</p>
+                  <p className="text-sm mt-1">Check back soon for updates from our community.</p>
+                </div>
+              )}
               {/* Featured */}
               {items.length > 0 && (
                 <div className="mb-16">

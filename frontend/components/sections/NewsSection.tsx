@@ -6,40 +6,15 @@ import { fetchNews } from '@/lib/api'
 import { ArrowRight, Calendar } from 'lucide-react'
 import { formatDate } from '@/lib/utils'
 
-const PLACEHOLDER_NEWS = [
-  {
-    id: 1,
-    title: 'New Scholarship Programme Launches for Rural Students',
-    excerpt: 'LIFTED TO LIFT announces a groundbreaking scholarship initiative supporting 50 students from public primary schools.',
-    image_url: 'https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=600&q=80',
-    created_at: new Date().toISOString(),
-    slug: '#',
-  },
-  {
-    id: 2,
-    title: 'Youth Skills Training Cohort Graduates 30 Young People',
-    excerpt: 'Our latest youth empowerment cohort completed hands-on technical training, ready to enter the workforce.',
-    image_url: 'https://images.unsplash.com/photo-1552664730-d307ca884978?w=600&q=80',
-    created_at: new Date(Date.now() - 7 * 86400000).toISOString(),
-    slug: '#',
-  },
-  {
-    id: 3,
-    title: 'Partnership with Local Schools to Provide Essential Resources',
-    excerpt: 'A new partnership ensures that 12 local schools receive books, stationery, and learning materials this year.',
-    image_url: 'https://images.unsplash.com/photo-1497486751825-1233686d5d80?w=600&q=80',
-    created_at: new Date(Date.now() - 14 * 86400000).toISOString(),
-    slug: '#',
-  },
-]
-
 export default function NewsSection() {
   const { data: news = [] } = useQuery({
     queryKey: ['news', 'published', 'featured'],
     queryFn: () => fetchNews({ published: 'true' }),
   })
 
-  const displayNews = news.length > 0 ? news.slice(0, 3) : PLACEHOLDER_NEWS
+  const displayNews = news.slice(0, 3)
+
+  if (displayNews.length === 0) return null
 
   return (
     <section className="py-24 bg-white">
