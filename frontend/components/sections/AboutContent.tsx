@@ -1,5 +1,6 @@
 'use client'
 import Image from 'next/image'
+import { useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { fetchSettings, fetchTeam, fetchPageContent } from '@/lib/api'
 import { Heart, Lightbulb, Scale, Shield, Quote } from 'lucide-react'
@@ -14,6 +15,15 @@ const VALUES = [
 ]
 
 export default function AboutContent() {
+  const [expandedBios, setExpandedBios] = useState<Set<number>>(new Set())
+
+  const toggleBio = (id: number) =>
+    setExpandedBios((prev) => {
+      const next = new Set(prev)
+      next.has(id) ? next.delete(id) : next.add(id)
+      return next
+    })
+
   const { data: settings = {} } = useQuery({ queryKey: ['settings'], queryFn: fetchSettings })
   const { data: team = [] } = useQuery({ queryKey: ['team'], queryFn: fetchTeam })
   const { data: content = {} } = useQuery({ queryKey: ['content', 'about'], queryFn: () => fetchPageContent('about') })
@@ -135,7 +145,19 @@ export default function AboutContent() {
                   </div>
                   <h3 className="font-black text-[var(--navy)] text-lg">{member.name}</h3>
                   {member.title && <p className="text-[var(--gold)] text-sm font-semibold mt-1">{member.title}</p>}
-                  {member.bio && <p className="text-gray-500 text-sm mt-3 leading-relaxed line-clamp-3">{member.bio}</p>}
+                  {member.bio && (
+                    <div className="mt-3 text-left">
+                      <p className={`text-gray-500 text-sm leading-relaxed ${expandedBios.has(member.id) ? '' : 'line-clamp-3'}`}>
+                        {member.bio}
+                      </p>
+                      <button
+                        onClick={() => toggleBio(member.id)}
+                        className="mt-1.5 text-[var(--gold)] text-xs font-semibold hover:underline focus:outline-none"
+                      >
+                        {expandedBios.has(member.id) ? 'Show less' : 'Read more'}
+                      </button>
+                    </div>
+                  )}
                 </div>
               ))}
             </div>
