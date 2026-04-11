@@ -6,21 +6,6 @@ import { fetchMedia } from '@/lib/api'
 import { X, Play, ChevronLeft, ChevronRight } from 'lucide-react'
 import PageHero from '@/components/ui/PageHero'
 
-const PLACEHOLDER = [
-  { id: 1, url: 'https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?w=800&q=80', type: 'image', alt_text: 'Happy children', caption: 'Educational Equity' },
-  { id: 2, url: 'https://images.unsplash.com/photo-1529390079861-591de354faf5?w=800&q=80', type: 'image', alt_text: 'Students learning', caption: 'Scholarship Program' },
-  { id: 3, url: 'https://images.unsplash.com/photo-1552664730-d307ca884978?w=800&q=80', type: 'image', alt_text: 'Youth training', caption: 'Youth Empowerment' },
-  { id: 4, url: 'https://images.unsplash.com/photo-1582213782179-e0d53f98f2ca?w=800&q=80', type: 'image', alt_text: 'Community gathering', caption: 'Community Impact' },
-  { id: 5, url: 'https://images.unsplash.com/photo-1521791136064-7986c2920216?w=800&q=80', type: 'image', alt_text: 'Partnership', caption: 'Partnerships' },
-  { id: 6, url: 'https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=800&q=80', type: 'image', alt_text: 'School children', caption: 'Education' },
-  { id: 7, url: 'https://images.unsplash.com/photo-1542810634-71277d95dcbb?w=800&q=80', type: 'image', alt_text: 'Children playing', caption: 'Happy Moments' },
-  { id: 8, url: 'https://images.unsplash.com/photo-1584820927498-cfe5211fd8bf?w=800&q=80', type: 'image', alt_text: 'Healthcare', caption: 'Senior Welfare' },
-  { id: 9, url: 'https://images.unsplash.com/photo-1544531585-9847b68c8c86?w=800&q=80', type: 'image', alt_text: 'Institution', caption: 'Institutional Stewardship' },
-  { id: 10, url: 'https://images.unsplash.com/photo-1497486751825-1233686d5d80?w=800&q=80', type: 'image', alt_text: 'Students', caption: 'Learning' },
-  { id: 11, url: 'https://images.unsplash.com/photo-1580582932707-520aed937b7b?w=800&q=80', type: 'image', alt_text: 'School', caption: 'Schools' },
-  { id: 12, url: 'https://images.unsplash.com/photo-1509062522246-3755977927d7?w=800&q=80', type: 'image', alt_text: 'Community', caption: 'Our Community' },
-]
-
 type MediaItem = { id: number; url: string; type: string; alt_text?: string; caption?: string }
 
 function LightboxModal({
@@ -83,7 +68,7 @@ export default function GalleryContent() {
     queryFn: () => fetchMedia(),
   })
 
-  const items: MediaItem[] = media.length > 0 ? media : PLACEHOLDER
+  const items: MediaItem[] = media
 
   const filtered = activeFilter === 'All'
     ? items
@@ -157,7 +142,13 @@ export default function GalleryContent() {
             ))}
           </div>
 
-          {filtered.length === 0 && (
+          {filtered.length === 0 && items.length === 0 && (
+            <div className="text-center py-20 text-gray-400">
+              <p className="text-lg font-semibold">No gallery items yet</p>
+              <p className="text-sm mt-1">Check back soon for photos and videos from our community.</p>
+            </div>
+          )}
+          {filtered.length === 0 && items.length > 0 && (
             <div className="text-center py-20 text-gray-400">
               <p className="text-lg">No items found for &ldquo;{activeFilter}&rdquo;</p>
             </div>

@@ -11,7 +11,6 @@ const PILLARS = [
     icon: GraduationCap,
     gradient: 'from-[#87ceeb] to-[#b0e0f5]',
     accentColor: '#c8932a',
-    image: 'https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=600&q=80',
     defaultTitle: 'Educational Equity & Scholarships',
     defaultBody: 'Partnering with public primary and junior schools to provide mentorship, essential academic resources, and comprehensive scholarships to ensure equal learning opportunities for all students.',
     number: '01',
@@ -21,7 +20,6 @@ const PILLARS = [
     icon: Zap,
     gradient: 'from-[#c8932a] to-[#e8b84b]',
     accentColor: '#87ceeb',
-    image: 'https://images.unsplash.com/photo-1552664730-d307ca884978?w=600&q=80',
     defaultTitle: 'Youth Empowerment',
     defaultBody: 'Equipping unemployed youth who faced educational barriers with practical, technical skills to foster self-reliance and employability.',
     number: '02',
@@ -31,7 +29,6 @@ const PILLARS = [
     icon: Heart,
     gradient: 'from-[#2d7a4e] to-[#3d9a60]',
     accentColor: '#ffffff',
-    image: 'https://images.unsplash.com/photo-1582213782179-e0d53f98f2ca?w=600&q=80',
     defaultTitle: "Senior Citizens' Welfare & Support",
     defaultBody: 'Upholding the dignity of the elderly by providing critical assistance with healthcare, nutrition, and clothing.',
     number: '03',
@@ -41,7 +38,6 @@ const PILLARS = [
     icon: Building2,
     gradient: 'from-[#6b3fa0] to-[#8a5cbf]',
     accentColor: '#ffffff',
-    image: 'https://images.unsplash.com/photo-1544531585-9847b68c8c86?w=600&q=80',
     defaultTitle: 'Institutional Stewardship & Reinvestment',
     defaultBody: 'Giving back to the institutions that shaped our foundation, ensuring their continued growth and preserving their legacy for future generations.',
     number: '04',
@@ -51,7 +47,6 @@ const PILLARS = [
     icon: Handshake,
     gradient: 'from-[#e0621e] to-[#f08030]',
     accentColor: '#ffffff',
-    image: 'https://images.unsplash.com/photo-1521791136064-7986c2920216?w=600&q=80',
     defaultTitle: 'Partnerships & Networking',
     defaultBody: 'Collaborating with local and international partners in order to maximize our impact across all communities.',
     number: '05',
@@ -84,7 +79,7 @@ export default function PillarsOverview() {
             const Icon = pillar.icon
             const title = content?.[pillar.key]?.title || pillar.defaultTitle
             const body = content?.[pillar.key]?.body || pillar.defaultBody
-            const imageSrc = (content as Record<string, Record<string, string>>)?.[pillar.key]?.image || pillar.image
+            const imageSrc = (content as Record<string, Record<string, string>>)?.[pillar.key]?.image
 
             return (
               <div
@@ -93,13 +88,17 @@ export default function PillarsOverview() {
               >
                 {/* Image */}
                 <div className="relative h-52 overflow-hidden">
-                  <Image
-                    src={imageSrc}
-                    alt={title}
-                    fill
-                    className="object-cover group-hover:scale-105 transition-transform duration-500"
-                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                  />
+                  {imageSrc ? (
+                    <Image
+                      src={imageSrc}
+                      alt={title}
+                      fill
+                      className="object-cover group-hover:scale-105 transition-transform duration-500"
+                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                    />
+                  ) : (
+                    <div className={`w-full h-full bg-gradient-to-br ${pillar.gradient}`} />
+                  )}
                   <div className={`absolute inset-0 bg-gradient-to-b ${pillar.gradient} opacity-60`} />
                   {/* Number badge */}
                   <div className="absolute top-4 right-4 w-10 h-10 rounded-full bg-white/20 backdrop-blur-sm border border-white/40 flex items-center justify-center">

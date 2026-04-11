@@ -5,22 +5,15 @@ import { useQuery } from '@tanstack/react-query'
 import { fetchMedia } from '@/lib/api'
 import { ArrowRight, ImageIcon } from 'lucide-react'
 
-const PLACEHOLDER_IMAGES = [
-  { url: 'https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?w=600&q=80', alt: 'Happy children', type: 'image' },
-  { url: 'https://images.unsplash.com/photo-1560252829-804f1aedf1be?w=600&q=80', alt: 'Community', type: 'image' },
-  { url: 'https://images.unsplash.com/photo-1509062522246-3755977927d7?w=600&q=80', alt: 'Education', type: 'image' },
-  { url: 'https://images.unsplash.com/photo-1542810634-71277d95dcbb?w=600&q=80', alt: 'Youth', type: 'image' },
-  { url: 'https://images.unsplash.com/photo-1568702846914-96b305d2aaeb?w=600&q=80', alt: 'Seniors', type: 'image' },
-  { url: 'https://images.unsplash.com/photo-1553729459-efe14ef6055d?w=600&q=80', alt: 'Partnership', type: 'image' },
-]
-
 export default function GalleryPreview() {
   const { data: media = [] } = useQuery({
     queryKey: ['media', 'gallery', 'featured'],
     queryFn: () => fetchMedia({ featured: 'true' }),
   })
 
-  const displayItems = media.length > 0 ? media.slice(0, 6) : PLACEHOLDER_IMAGES
+  const displayItems = media.slice(0, 6)
+
+  if (displayItems.length === 0) return null
 
   return (
     <section className="py-24 bg-[var(--cream)]">
