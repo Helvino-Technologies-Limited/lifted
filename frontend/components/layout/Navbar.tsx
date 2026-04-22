@@ -24,6 +24,16 @@ const navLinks = [
   },
   { label: 'Gallery', href: '/gallery' },
   { label: 'News', href: '/news' },
+  {
+    label: 'Get Involved',
+    href: '/sponsor',
+    children: [
+      { label: 'Sponsor a Child', href: '/sponsor' },
+      { label: 'Upcoming Events', href: '/events' },
+      { label: 'Our Needs', href: '/needs' },
+      { label: 'Donate', href: '/donate' },
+    ],
+  },
   { label: 'Contact', href: '/contact' },
 ]
 
@@ -80,7 +90,7 @@ export default function Navbar() {
                     <button
                       className={cn(
                         'flex items-center gap-1 px-4 py-2 rounded-lg font-semibold text-sm transition-all',
-                        pathname.startsWith('/programs') ? 'text-[var(--gold)]' : '',
+                        (pathname.startsWith('/programs') || pathname.startsWith('/sponsor') || pathname.startsWith('/events') || pathname.startsWith('/needs') || pathname.startsWith('/donate')) ? 'text-[var(--gold)]' : '',
                         'hover:text-[var(--gold)]'
                       )}
                       onMouseEnter={() => setOpenDropdown(link.label)}

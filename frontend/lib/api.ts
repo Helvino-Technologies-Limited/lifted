@@ -87,3 +87,15 @@ export const adminDeleteNewsletter = (id: number) =>
 
 export const adminUpdateMedia = (id: number, data: Record<string, unknown>) =>
   api.put(`/api/media/${id}`, data).then((r) => r.data)
+
+// ---- Children Sponsorship ----
+export const fetchChildren = (params?: Record<string, string>) =>
+  api.get('/api/children', { params }).then((r) => r.data)
+
+// ---- Events ----
+export const fetchEvents = (params?: Record<string, string>) =>
+  api.get('/api/events', { params }).then((r) => r.data)
+
+// ---- Needs ----
+export const fetchNeeds = (params?: Record<string, string>) =>
+  api.get('/api/needs', { params }).then((r) => r.data)

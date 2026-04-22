@@ -131,6 +131,48 @@ CREATE TABLE IF NOT EXISTS contact_messages (
   created_at TIMESTAMP DEFAULT NOW()
 );
 
+-- Sponsored Children
+CREATE TABLE IF NOT EXISTS sponsored_children (
+  id SERIAL PRIMARY KEY,
+  name VARCHAR(255) NOT NULL,
+  age INTEGER,
+  grade VARCHAR(100),
+  story TEXT,
+  photo_url TEXT,
+  photo_public_id TEXT,
+  sponsored BOOLEAN DEFAULT FALSE,
+  active BOOLEAN DEFAULT TRUE,
+  display_order INTEGER DEFAULT 0,
+  created_at TIMESTAMP DEFAULT NOW()
+);
+
+-- Upcoming Events
+CREATE TABLE IF NOT EXISTS events (
+  id SERIAL PRIMARY KEY,
+  title VARCHAR(255) NOT NULL,
+  description TEXT,
+  event_date TIMESTAMP NOT NULL,
+  location VARCHAR(255),
+  image_url TEXT,
+  image_public_id TEXT,
+  published BOOLEAN DEFAULT TRUE,
+  created_at TIMESTAMP DEFAULT NOW()
+);
+
+-- Listed Needs
+CREATE TABLE IF NOT EXISTS needs (
+  id SERIAL PRIMARY KEY,
+  title VARCHAR(255) NOT NULL,
+  description TEXT,
+  category VARCHAR(100),
+  quantity_needed INTEGER,
+  quantity_fulfilled INTEGER DEFAULT 0,
+  urgent BOOLEAN DEFAULT FALSE,
+  active BOOLEAN DEFAULT TRUE,
+  display_order INTEGER DEFAULT 0,
+  created_at TIMESTAMP DEFAULT NOW()
+);
+
 -- Gallery Albums
 CREATE TABLE IF NOT EXISTS gallery_albums (
   id SERIAL PRIMARY KEY,

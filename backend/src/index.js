@@ -14,6 +14,9 @@ const newsRoutes = require('./routes/news');
 const newslettersRoutes = require('./routes/newsletters');
 const partnersRoutes = require('./routes/partners');
 const messagesRoutes = require('./routes/messages');
+const childrenRoutes = require('./routes/children');
+const eventsRoutes = require('./routes/events');
+const needsRoutes = require('./routes/needs');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -65,6 +68,9 @@ app.use('/api/news', newsRoutes);
 app.use('/api/newsletters', newslettersRoutes);
 app.use('/api/partners', partnersRoutes);
 app.use('/api/messages', messagesRoutes);
+app.use('/api/children', childrenRoutes);
+app.use('/api/events', eventsRoutes);
+app.use('/api/needs', needsRoutes);
 
 // 404
 app.use((req, res) => res.status(404).json({ error: 'Route not found.' }));
