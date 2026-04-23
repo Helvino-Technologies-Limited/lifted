@@ -11,7 +11,7 @@ import {
   LayoutDashboard, FileText, Image as ImageIcon, Users,
   Settings, LogOut, Menu, X, Building2, Newspaper,
   ExternalLink, ChevronRight, Globe, BookOpen, Heart, Inbox,
-  Baby, CalendarDays, PackageSearch
+  Baby, CalendarDays, PackageSearch, Sparkles
 } from 'lucide-react'
 
 const NAV_ITEMS = [
@@ -27,6 +27,7 @@ const NAV_ITEMS = [
   { label: 'Events', href: '/admin/events', icon: CalendarDays },
   { label: 'Listed Needs', href: '/admin/needs', icon: PackageSearch },
   { label: 'Donation Page', href: '/admin/donations', icon: Heart },
+  { label: 'Impact Items', href: '/admin/impact', icon: Sparkles },
   { label: 'Messages', href: '/admin/messages', icon: Inbox },
   { label: 'Contact & Settings', href: '/admin/settings', icon: Settings },
 ]

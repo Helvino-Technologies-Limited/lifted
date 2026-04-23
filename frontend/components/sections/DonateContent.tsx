@@ -1,16 +1,9 @@
 'use client'
 import { useQuery } from '@tanstack/react-query'
-import { fetchSettings } from '@/lib/api'
+import { fetchSettings, fetchImpactItems } from '@/lib/api'
 import PageHero from '@/components/ui/PageHero'
 import { Smartphone, Building2, Globe, Copy, Check, Heart } from 'lucide-react'
 import { useState } from 'react'
-
-const IMPACT_ITEMS = [
-  { amount: 'KES 500', label: 'Buys school supplies for one child' },
-  { amount: 'KES 2,000', label: 'Funds a month of mentorship sessions' },
-  { amount: 'KES 5,000', label: 'Covers a youth skills training module' },
-  { amount: 'KES 10,000', label: 'Provides full term scholarship support' },
-]
 
 function CopyButton({ text }: { text: string }) {
   const [copied, setCopied] = useState(false)
@@ -43,8 +36,11 @@ function DetailRow({ label, value }: { label: string; value: string }) {
   )
 }
 
+type ImpactItem = { id: number; amount: string; label: string; display_order: number }
+
 export default function DonateContent() {
   const { data: settings = {} } = useQuery({ queryKey: ['settings'], queryFn: fetchSettings })
+  const { data: impactItems = [] } = useQuery<ImpactItem[]>({ queryKey: ['impact-items'], queryFn: fetchImpactItems })
 
   const s = settings as Record<string, string>
 
@@ -75,18 +71,20 @@ export default function DonateContent() {
           )}
 
           {/* Impact amounts */}
-          <div>
-            <h2 className="text-2xl font-black text-[var(--navy)] text-center mb-2">Your Impact</h2>
-            <p className="text-gray-500 text-center mb-8 text-sm">See what your donation can do</p>
-            <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
-              {IMPACT_ITEMS.map(({ amount, label }) => (
-                <div key={amount} className="bg-white rounded-2xl p-5 border border-gray-100 shadow-sm text-center hover:border-[var(--gold)] hover:shadow-md transition-all">
-                  <div className="text-2xl font-black text-[var(--gold)] mb-2">{amount}</div>
-                  <div className="text-sm text-gray-500 leading-snug">{label}</div>
-                </div>
-              ))}
+          {impactItems.length > 0 && (
+            <div>
+              <h2 className="text-2xl font-black text-[var(--navy)] text-center mb-2">Your Impact</h2>
+              <p className="text-gray-500 text-center mb-8 text-sm">See what your donation can do</p>
+              <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                {impactItems.map(({ id, amount, label }) => (
+                  <div key={id} className="bg-white rounded-2xl p-5 border border-gray-100 shadow-sm text-center hover:border-[var(--gold)] hover:shadow-md transition-all">
+                    <div className="text-2xl font-black text-[var(--gold)] mb-2">{amount}</div>
+                    <div className="text-sm text-gray-500 leading-snug">{label}</div>
+                  </div>
+                ))}
+              </div>
             </div>
-          </div>
+          )}
 
           {/* Payment methods */}
           {(hasMpesa || hasBank || hasPaypal) ? (

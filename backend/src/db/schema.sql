@@ -265,4 +265,22 @@ INSERT INTO page_content (page, section, field, content) VALUES
   ('contact', 'header', 'subtitle', 'We''d love to hear from you. Reach out to learn more about our work or how you can get involved.')
 ON CONFLICT (page, section, field) DO NOTHING;
 
+-- Donate Page Impact Items
+CREATE TABLE IF NOT EXISTS donate_impact_items (
+  id SERIAL PRIMARY KEY,
+  amount VARCHAR(255) NOT NULL,
+  label TEXT NOT NULL,
+  display_order INTEGER DEFAULT 0,
+  active BOOLEAN DEFAULT TRUE,
+  created_at TIMESTAMP DEFAULT NOW(),
+  updated_at TIMESTAMP DEFAULT NOW()
+);
+
+INSERT INTO donate_impact_items (amount, label, display_order) VALUES
+  ('KES 500', 'Buys school supplies for one child', 1),
+  ('KES 2,000', 'Funds a month of mentorship sessions', 2),
+  ('KES 5,000', 'Covers a youth skills training module', 3),
+  ('KES 10,000', 'Provides full term scholarship support', 4)
+ON CONFLICT DO NOTHING;
+
 -- Team members are managed entirely via the admin panel (/admin/team)
