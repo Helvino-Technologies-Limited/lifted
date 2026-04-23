@@ -103,3 +103,7 @@ export const fetchNeeds = (params?: Record<string, string>) =>
 // ---- Donate Impact Items ----
 export const fetchImpactItems = () => api.get('/api/impact-items').then((r) => r.data)
 export const fetchAllImpactItems = () => api.get('/api/impact-items/all').then((r) => r.data)
+
+// ---- Testimonials ----
+export const fetchTestimonials = () => api.get('/api/testimonials').then((r) => r.data)
+export const fetchAllTestimonials = () => api.get('/api/testimonials/all').then((r) => r.data)

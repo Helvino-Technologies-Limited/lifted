@@ -32,6 +32,10 @@ export default function AdminMedia() {
 
   const handleUpload = async (files: FileList | null) => {
     if (!files?.length) return
+    if (!form.page) {
+      toast.error('Please select which page this image is for before uploading.')
+      return
+    }
     setUploading(true)
     let successCount = 0
     for (const file of Array.from(files)) {
@@ -99,8 +103,41 @@ export default function AdminMedia() {
         {/* Upload Zone */}
         <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
           <div className="p-6 border-b border-gray-100">
-            <h3 className="font-black text-[var(--navy)] mb-4">Upload Files</h3>
-            <div className="grid sm:grid-cols-3 gap-4 mb-4">
+            <h3 className="font-black text-[var(--navy)] mb-1">Upload Files</h3>
+            <p className="text-sm text-gray-500 mb-4">Fill in the details below before uploading so the image goes to the right place.</p>
+
+            {/* "Where does this go?" — prominently shown first */}
+            <div className="bg-[var(--gold-pale)] border border-[var(--gold)]/30 rounded-xl p-4 mb-4">
+              <p className="text-sm font-black text-[var(--navy)] mb-3 flex items-center gap-2">
+                <span className="w-5 h-5 rounded-full bg-[var(--gold)] flex items-center justify-center text-white text-[10px] font-black">?</span>
+                Where should this image/video appear on the website?
+              </p>
+              <div className="grid sm:grid-cols-2 gap-3">
+                <div>
+                  <label className="text-xs font-semibold text-[var(--navy)] block mb-1.5">Page <span className="text-red-500">*</span></label>
+                  <select
+                    value={form.page}
+                    onChange={(e) => setForm((f) => ({ ...f, page: e.target.value }))}
+                    className="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:outline-none focus:border-[var(--gold)] bg-white"
+                  >
+                    <option value="">— Select a page —</option>
+                    {PAGES.map((p) => <option key={p} value={p}>{p.charAt(0).toUpperCase() + p.slice(1)} Page</option>)}
+                  </select>
+                </div>
+                <div>
+                  <label className="text-xs font-semibold text-[var(--navy)] block mb-1.5">Category <span className="text-red-500">*</span></label>
+                  <select
+                    value={form.category}
+                    onChange={(e) => setForm((f) => ({ ...f, category: e.target.value }))}
+                    className="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:outline-none focus:border-[var(--gold)] bg-white"
+                  >
+                    {CATEGORIES.map((c) => <option key={c} value={c}>{c.charAt(0).toUpperCase() + c.slice(1)}</option>)}
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <div className="grid sm:grid-cols-2 gap-4 mb-4">
               <div>
                 <label className="text-xs font-semibold text-gray-600 block mb-1.5">Alt Text / Description</label>
                 <input
@@ -112,25 +149,14 @@ export default function AdminMedia() {
                 />
               </div>
               <div>
-                <label className="text-xs font-semibold text-gray-600 block mb-1.5">Category</label>
-                <select
-                  value={form.category}
-                  onChange={(e) => setForm((f) => ({ ...f, category: e.target.value }))}
-                  className="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:outline-none focus:border-[var(--gold)] bg-white"
-                >
-                  {CATEGORIES.map((c) => <option key={c} value={c}>{c}</option>)}
-                </select>
-              </div>
-              <div>
-                <label className="text-xs font-semibold text-gray-600 block mb-1.5">Page (optional)</label>
-                <select
-                  value={form.page}
-                  onChange={(e) => setForm((f) => ({ ...f, page: e.target.value }))}
-                  className="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:outline-none focus:border-[var(--gold)] bg-white"
-                >
-                  <option value="">All pages</option>
-                  {PAGES.map((p) => <option key={p} value={p}>{p}</option>)}
-                </select>
+                <label className="text-xs font-semibold text-gray-600 block mb-1.5">Caption (optional)</label>
+                <input
+                  type="text"
+                  value={form.caption}
+                  onChange={(e) => setForm((f) => ({ ...f, caption: e.target.value }))}
+                  className="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:outline-none focus:border-[var(--gold)]"
+                  placeholder="Optional caption shown with the image"
+                />
               </div>
             </div>
 

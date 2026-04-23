@@ -283,4 +283,33 @@ INSERT INTO donate_impact_items (amount, label, display_order) VALUES
   ('KES 10,000', 'Provides full term scholarship support', 4)
 ON CONFLICT DO NOTHING;
 
+-- Migrate: new columns for impact items
+ALTER TABLE donate_impact_items ADD COLUMN IF NOT EXISTS program VARCHAR(255);
+ALTER TABLE donate_impact_items ADD COLUMN IF NOT EXISTS focus_area VARCHAR(255);
+ALTER TABLE donate_impact_items ADD COLUMN IF NOT EXISTS financial_need TEXT;
+ALTER TABLE donate_impact_items ADD COLUMN IF NOT EXISTS quantity_required VARCHAR(100);
+ALTER TABLE donate_impact_items ADD COLUMN IF NOT EXISTS amount_required VARCHAR(100);
+ALTER TABLE donate_impact_items ADD COLUMN IF NOT EXISTS quantity_fulfilled_pct INTEGER DEFAULT 0;
+ALTER TABLE donate_impact_items ADD COLUMN IF NOT EXISTS amount_fulfilled_pct INTEGER DEFAULT 0;
+
+-- Migrate: image for needs
+ALTER TABLE needs ADD COLUMN IF NOT EXISTS image_url TEXT;
+
+-- Testimonials
+CREATE TABLE IF NOT EXISTS testimonials (
+  id SERIAL PRIMARY KEY,
+  name VARCHAR(255) NOT NULL,
+  role VARCHAR(255),
+  quote TEXT NOT NULL,
+  photo_url TEXT,
+  active BOOLEAN DEFAULT TRUE,
+  display_order INTEGER DEFAULT 0,
+  created_at TIMESTAMP DEFAULT NOW()
+);
+
+-- WhatsApp contact setting
+INSERT INTO site_settings (key, value, label, category)
+VALUES ('whatsapp_number', '0705560257', 'WhatsApp Number', 'contact')
+ON CONFLICT (key) DO NOTHING;
+
 -- Team members are managed entirely via the admin panel (/admin/team)

@@ -1,5 +1,6 @@
 'use client'
 import Link from 'next/link'
+import Image from 'next/image'
 import { useQuery } from '@tanstack/react-query'
 import { fetchNeeds } from '@/lib/api'
 import { AlertTriangle, Package, Mail } from 'lucide-react'
@@ -14,6 +15,7 @@ type Need = {
   quantity_fulfilled: number
   urgent: boolean
   active: boolean
+  image_url?: string
 }
 
 const CATEGORY_COLORS: Record<string, string> = {
@@ -45,42 +47,56 @@ export default function NeedsContent() {
     const pct = fulfillmentPct(need)
     const colorClass = CATEGORY_COLORS[need.category || ''] || CATEGORY_COLORS.Other
     return (
-      <div className={`bg-white rounded-2xl border shadow-sm p-5 ${need.urgent ? 'border-red-200' : 'border-gray-100'}`}>
-        <div className="flex items-start justify-between gap-3 mb-3">
-          <div className="flex items-start gap-3">
-            <div className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 ${need.urgent ? 'bg-red-100' : 'bg-[var(--navy)]/10'}`}>
-              {need.urgent ? <AlertTriangle size={18} className="text-red-500" /> : <Package size={18} className="text-[var(--navy)]" />}
-            </div>
-            <div>
-              <h3 className="font-black text-[var(--navy)] text-sm leading-tight">{need.title}</h3>
-              {need.category && (
-                <span className={`inline-block text-[10px] font-bold px-2 py-0.5 rounded-full mt-1 ${colorClass}`}>
-                  {need.category}
-                </span>
-              )}
-            </div>
+      <div className={`bg-white rounded-2xl border shadow-sm overflow-hidden ${need.urgent ? 'border-red-200' : 'border-gray-100'}`}>
+        {need.image_url && (
+          <div className="relative h-44 w-full">
+            <Image src={need.image_url} alt={need.title} fill className="object-cover" />
+            {need.urgent && (
+              <span className="absolute top-2 left-2 bg-red-600 text-white text-[10px] font-black rounded-full px-2 py-0.5 flex items-center gap-1">
+                <AlertTriangle size={9} /> Urgent
+              </span>
+            )}
           </div>
-          {need.urgent && (
-            <span className="shrink-0 bg-red-100 text-red-700 text-[10px] font-black rounded-full px-2 py-0.5 whitespace-nowrap">Urgent</span>
+        )}
+        <div className="p-5">
+          <div className="flex items-start justify-between gap-3 mb-3">
+            <div className="flex items-start gap-3">
+              {!need.image_url && (
+                <div className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 ${need.urgent ? 'bg-red-100' : 'bg-[var(--navy)]/10'}`}>
+                  {need.urgent ? <AlertTriangle size={18} className="text-red-500" /> : <Package size={18} className="text-[var(--navy)]" />}
+                </div>
+              )}
+              <div>
+                <h3 className="font-black text-[var(--navy)] text-sm leading-tight">{need.title}</h3>
+                {need.category && (
+                  <span className={`inline-block text-[10px] font-bold px-2 py-0.5 rounded-full mt-1 ${colorClass}`}>
+                    {need.category}
+                  </span>
+                )}
+              </div>
+            </div>
+            {need.urgent && !need.image_url && (
+              <span className="shrink-0 bg-red-100 text-red-700 text-[10px] font-black rounded-full px-2 py-0.5 whitespace-nowrap">Urgent</span>
+            )}
+          </div>
+          {need.description && (
+            <p className="text-gray-600 text-sm leading-relaxed mb-3">{need.description}</p>
+          )}
+          {pct !== null && (
+            <div className="mt-2">
+              <div className="flex justify-between text-xs text-gray-500 mb-1">
+                <span>{need.quantity_fulfilled} of {need.quantity_needed} {need.category === 'Financial' ? 'units' : 'items'}</span>
+                <span className="font-bold text-[var(--navy)]">{pct}%</span>
+              </div>
+              <div className="w-full h-2 bg-gray-100 rounded-full overflow-hidden">
+                <div
+                  className={`h-full rounded-full transition-all ${pct >= 100 ? 'bg-green-400' : need.urgent ? 'bg-red-400' : 'bg-[var(--gold)]'}`}
+                  style={{ width: `${pct}%` }}
+                />
+              </div>
+            </div>
           )}
         </div>
-        {need.description && (
-          <p className="text-gray-600 text-sm leading-relaxed mb-3">{need.description}</p>
-        )}
-        {pct !== null && (
-          <div className="mt-2">
-            <div className="flex justify-between text-xs text-gray-500 mb-1">
-              <span>{need.quantity_fulfilled} of {need.quantity_needed} {need.category === 'Financial' ? 'units' : 'items'}</span>
-              <span className="font-bold text-[var(--navy)]">{pct}%</span>
-            </div>
-            <div className="w-full h-2 bg-gray-100 rounded-full overflow-hidden">
-              <div
-                className={`h-full rounded-full transition-all ${pct >= 100 ? 'bg-green-400' : need.urgent ? 'bg-red-400' : 'bg-[var(--gold)]'}`}
-                style={{ width: `${pct}%` }}
-              />
-            </div>
-          </div>
-        )}
       </div>
     )
   }

@@ -1,10 +1,11 @@
 'use client'
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 import AdminLayout from '@/components/admin/AdminLayout'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { fetchNeeds, api } from '@/lib/api'
+import Image from 'next/image'
 import toast from 'react-hot-toast'
-import { Plus, Trash2, Edit2, X, Check, AlertTriangle, Package } from 'lucide-react'
+import { Plus, Trash2, Edit2, X, Check, AlertTriangle, Package, ImageIcon, Upload } from 'lucide-react'
 
 type Need = {
   id: number
@@ -16,10 +17,11 @@ type Need = {
   urgent: boolean
   active: boolean
   display_order: number
+  image_url?: string
 }
 
 const CATEGORIES = ['Food', 'Clothing', 'School Supplies', 'Medical', 'Financial', 'Furniture', 'Electronics', 'Other']
-const BLANK: Partial<Need> = { title: '', description: '', category: '', quantity_needed: undefined, quantity_fulfilled: 0, urgent: false, active: true, display_order: 0 }
+const BLANK: Partial<Need> = { title: '', description: '', category: '', quantity_needed: undefined, quantity_fulfilled: 0, urgent: false, active: true, display_order: 0, image_url: '' }
 
 export default function AdminNeeds() {
   const qc = useQueryClient()
@@ -27,35 +29,50 @@ export default function AdminNeeds() {
   const [editId, setEditId] = useState<number | 'new' | null>(null)
   const [form, setForm] = useState<Partial<Need>>(BLANK)
   const [saving, setSaving] = useState(false)
+  const [imageFile, setImageFile] = useState<File | null>(null)
+  const [imagePreview, setImagePreview] = useState<string>('')
+  const fileRef = useRef<HTMLInputElement>(null)
 
   const handleOpenEdit = (need?: Need) => {
     setEditId(need?.id ?? 'new')
     setForm(need ? { ...need } : { ...BLANK })
+    setImageFile(null)
+    setImagePreview(need?.image_url || '')
+  }
+
+  const handleImageSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (!file) return
+    setImageFile(file)
+    setImagePreview(URL.createObjectURL(file))
   }
 
   const handleSave = async () => {
     if (!form.title) return toast.error('Title is required.')
     setSaving(true)
     try {
-      const body = {
-        title: form.title,
-        description: form.description || '',
-        category: form.category || '',
-        quantity_needed: form.quantity_needed ?? null,
-        quantity_fulfilled: form.quantity_fulfilled ?? 0,
-        urgent: form.urgent ?? false,
-        active: form.active ?? true,
-        display_order: form.display_order ?? 0,
-      }
+      const fd = new FormData()
+      fd.append('title', form.title || '')
+      fd.append('description', form.description || '')
+      fd.append('category', form.category || '')
+      fd.append('quantity_needed', form.quantity_needed?.toString() ?? '')
+      fd.append('quantity_fulfilled', (form.quantity_fulfilled ?? 0).toString())
+      fd.append('urgent', String(form.urgent ?? false))
+      fd.append('active', String(form.active ?? true))
+      fd.append('display_order', (form.display_order ?? 0).toString())
+      if (imageFile) fd.append('image', imageFile)
+
       if (editId === 'new') {
-        await api.post('/api/needs', body)
+        await api.post('/api/needs', fd, { headers: { 'Content-Type': 'multipart/form-data' } })
         toast.success('Need added!')
       } else {
-        await api.put(`/api/needs/${editId}`, body)
+        await api.put(`/api/needs/${editId}`, fd, { headers: { 'Content-Type': 'multipart/form-data' } })
         toast.success('Updated!')
       }
       qc.invalidateQueries({ queryKey: ['needs'] })
       setEditId(null)
+      setImageFile(null)
+      setImagePreview('')
     } catch {
       toast.error('Failed to save.')
     } finally {
@@ -85,7 +102,7 @@ export default function AdminNeeds() {
         <div className="flex justify-between items-start">
           <div>
             <h2 className="text-2xl font-black text-[var(--navy)]">Listed Needs</h2>
-            <p className="text-gray-500 text-sm mt-1">Manage items and resources needed by the organisation.</p>
+            <p className="text-gray-500 text-sm mt-1">Manage items and resources needed by the organisation. Each need can have a photo.</p>
           </div>
           <button
             onClick={() => handleOpenEdit()}
@@ -114,37 +131,48 @@ export default function AdminNeeds() {
           {(needs as Need[]).map((need) => {
             const pct = fulfillmentPct(need)
             return (
-              <div key={need.id} className={`bg-white rounded-2xl p-5 border shadow-sm group relative ${!need.active ? 'opacity-60' : ''} ${need.urgent ? 'border-red-200' : 'border-gray-100'}`}>
-                {need.urgent && (
-                  <span className="absolute top-3 right-3 bg-red-100 text-red-700 text-[10px] font-black rounded-full px-2 py-0.5 flex items-center gap-1">
-                    <AlertTriangle size={9} /> Urgent
-                  </span>
+              <div key={need.id} className={`bg-white rounded-2xl overflow-hidden border shadow-sm group relative ${!need.active ? 'opacity-60' : ''} ${need.urgent ? 'border-red-200' : 'border-gray-100'}`}>
+                {need.image_url && (
+                  <div className="relative h-36 w-full">
+                    <Image src={need.image_url} alt={need.title} fill className="object-cover" />
+                    {need.urgent && (
+                      <span className="absolute top-2 left-2 bg-red-600 text-white text-[10px] font-black rounded-full px-2 py-0.5 flex items-center gap-1">
+                        <AlertTriangle size={9} /> Urgent
+                      </span>
+                    )}
+                  </div>
                 )}
-                <div className="flex items-start gap-3">
-                  <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[var(--navy)] to-[var(--navy-light)] flex items-center justify-center shrink-0">
-                    <Package size={16} className="text-white" />
+                <div className="p-4">
+                  {!need.image_url && need.urgent && (
+                    <span className="absolute top-3 right-10 bg-red-100 text-red-700 text-[10px] font-black rounded-full px-2 py-0.5 flex items-center gap-1">
+                      <AlertTriangle size={9} /> Urgent
+                    </span>
+                  )}
+                  <div className="flex items-start gap-3">
+                    {!need.image_url && (
+                      <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[var(--navy)] to-[var(--navy-light)] flex items-center justify-center shrink-0">
+                        <Package size={16} className="text-white" />
+                      </div>
+                    )}
+                    <div className="flex-1 min-w-0">
+                      <p className="font-black text-[var(--navy)] text-sm">{need.title}</p>
+                      {need.category && <p className="text-[var(--gold)] text-xs font-semibold">{need.category}</p>}
+                      {need.description && <p className="text-gray-400 text-xs mt-1 line-clamp-2">{need.description}</p>}
+                    </div>
                   </div>
-                  <div className="flex-1 min-w-0">
-                    <p className="font-black text-[var(--navy)] text-sm">{need.title}</p>
-                    {need.category && <p className="text-[var(--gold)] text-xs font-semibold">{need.category}</p>}
-                    {need.description && <p className="text-gray-400 text-xs mt-1 line-clamp-2">{need.description}</p>}
-                  </div>
+                  {pct !== null && (
+                    <div className="mt-3">
+                      <div className="flex justify-between text-xs text-gray-500 mb-1">
+                        <span>{need.quantity_fulfilled} of {need.quantity_needed} fulfilled</span>
+                        <span className="font-bold">{pct}%</span>
+                      </div>
+                      <div className="w-full h-1.5 bg-gray-100 rounded-full overflow-hidden">
+                        <div className="h-full bg-[var(--gold)] rounded-full transition-all" style={{ width: `${pct}%` }} />
+                      </div>
+                    </div>
+                  )}
                 </div>
-                {pct !== null && (
-                  <div className="mt-3">
-                    <div className="flex justify-between text-xs text-gray-500 mb-1">
-                      <span>{need.quantity_fulfilled} of {need.quantity_needed} fulfilled</span>
-                      <span className="font-bold">{pct}%</span>
-                    </div>
-                    <div className="w-full h-1.5 bg-gray-100 rounded-full overflow-hidden">
-                      <div
-                        className="h-full bg-[var(--gold)] rounded-full transition-all"
-                        style={{ width: `${pct}%` }}
-                      />
-                    </div>
-                  </div>
-                )}
-                <div className="absolute top-3 right-3 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity" style={{ marginTop: need.urgent ? '24px' : '0' }}>
+                <div className="absolute top-3 right-3 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
                   <button onClick={() => handleOpenEdit(need)} className="p-1.5 rounded-lg hover:bg-blue-50 text-blue-500 transition-colors bg-white shadow-sm">
                     <Edit2 size={13} />
                   </button>
@@ -174,6 +202,37 @@ export default function AdminNeeds() {
               </div>
 
               <div className="space-y-4">
+                {/* Image upload */}
+                <div>
+                  <label className="text-sm font-semibold text-[var(--navy)] block mb-1.5">Photo</label>
+                  {imagePreview ? (
+                    <div className="relative h-40 rounded-xl overflow-hidden border border-gray-200 group cursor-pointer" onClick={() => fileRef.current?.click()}>
+                      <Image src={imagePreview} alt="Preview" fill className="object-cover" />
+                      <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                        <span className="text-white text-xs font-bold">Click to change</span>
+                      </div>
+                    </div>
+                  ) : (
+                    <div
+                      className="border-2 border-dashed border-gray-200 rounded-xl p-6 text-center cursor-pointer hover:border-[var(--gold)] transition-colors"
+                      onClick={() => fileRef.current?.click()}
+                    >
+                      <ImageIcon size={24} className="mx-auto text-gray-300 mb-2" />
+                      <p className="text-xs text-gray-400">Click to upload a photo for this need</p>
+                    </div>
+                  )}
+                  <input ref={fileRef} type="file" accept="image/*" className="hidden" onChange={handleImageSelect} />
+                  {imagePreview && (
+                    <button
+                      type="button"
+                      onClick={() => { setImageFile(null); setImagePreview(''); setForm(f => ({ ...f, image_url: '' })) }}
+                      className="mt-1 text-xs text-red-400 hover:underline flex items-center gap-1"
+                    >
+                      <Upload size={11} /> Remove photo
+                    </button>
+                  )}
+                </div>
+
                 <div>
                   <label className="text-sm font-semibold text-[var(--navy)] block mb-1.5">Title *</label>
                   <input

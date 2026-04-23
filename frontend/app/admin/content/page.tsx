@@ -25,6 +25,8 @@ const PAGE_SECTIONS = [
       { section: 'vision', label: 'Vision', fields: ['title', 'body'] },
       { section: 'values', label: 'Values', fields: ['title'] },
       { section: 'about_images', label: 'Mission Section — Images', fields: ['image1', 'image2', 'image3', 'image4'] },
+      { section: 'additional_info', label: 'Additional Organisation Info', fields: ['title', 'body'] },
+      { section: 'trust_governance', label: 'Trust & Governance', fields: ['title', 'body'] },
     ],
   },
   {

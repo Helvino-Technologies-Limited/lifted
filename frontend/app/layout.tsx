@@ -28,6 +28,13 @@ export const metadata: Metadata = {
     type: 'website',
     url: 'https://liftedtolift.org',
     siteName: 'LIFTED TO LIFT',
+    images: ['/opengraph-image'],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'LIFTED TO LIFT — Blessed to be a Blessing',
+    description: 'A legacy of transformed individuals lifting others.',
+    images: ['/opengraph-image'],
   },
   alternates: {
     canonical: 'https://liftedtolift.org',

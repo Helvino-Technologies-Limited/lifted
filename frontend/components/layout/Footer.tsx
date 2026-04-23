@@ -1,12 +1,16 @@
 'use client'
 import Link from 'next/link'
+import Image from 'next/image'
 import { useQuery } from '@tanstack/react-query'
-import { fetchSettings } from '@/lib/api'
+import { fetchSettings, fetchPartners } from '@/lib/api'
 import { MapPin, Phone, Mail, Heart } from 'lucide-react'
 import { FacebookIcon, TwitterIcon, InstagramIcon, YoutubeIcon, LinkedinIcon } from '@/components/ui/SocialIcons'
 
+type Partner = { id: number; name: string; logo_url?: string; website_url?: string }
+
 export default function Footer() {
   const { data: settings = {} } = useQuery({ queryKey: ['settings'], queryFn: fetchSettings })
+  const { data: partners = [] } = useQuery<Partner[]>({ queryKey: ['partners'], queryFn: fetchPartners })
 
   return (
     <footer className="bg-[var(--navy-dark)] text-gray-300">
@@ -133,6 +137,41 @@ export default function Footer() {
             </ul>
           </div>
         </div>
+
+        {/* Partners */}
+        {partners.length > 0 && (
+          <div className="border-t border-gray-800 mt-12 pt-10">
+            <p className="text-center text-xs text-gray-500 uppercase tracking-widest font-semibold mb-6">Our Partners</p>
+            <div className="flex flex-wrap justify-center items-center gap-6">
+              {partners.map((partner) => (
+                partner.website_url ? (
+                  <a
+                    key={partner.id}
+                    href={partner.website_url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    title={partner.name}
+                    className="opacity-50 hover:opacity-100 transition-opacity"
+                  >
+                    {partner.logo_url ? (
+                      <Image src={partner.logo_url} alt={partner.name} width={80} height={40} className="object-contain h-10 w-auto filter brightness-0 invert" />
+                    ) : (
+                      <span className="text-gray-400 text-sm font-semibold">{partner.name}</span>
+                    )}
+                  </a>
+                ) : (
+                  <div key={partner.id} className="opacity-50" title={partner.name}>
+                    {partner.logo_url ? (
+                      <Image src={partner.logo_url} alt={partner.name} width={80} height={40} className="object-contain h-10 w-auto filter brightness-0 invert" />
+                    ) : (
+                      <span className="text-gray-400 text-sm font-semibold">{partner.name}</span>
+                    )}
+                  </div>
+                )
+              ))}
+            </div>
+          </div>
+        )}
 
         <div className="border-t border-gray-800 mt-12 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
           <p className="text-sm text-gray-500">

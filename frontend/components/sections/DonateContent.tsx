@@ -36,7 +36,26 @@ function DetailRow({ label, value }: { label: string; value: string }) {
   )
 }
 
-type ImpactItem = { id: number; amount: string; label: string; display_order: number }
+type ImpactItem = {
+  id: number
+  program?: string
+  focus_area?: string
+  financial_need?: string
+  quantity_required?: string
+  amount_required?: string
+  quantity_fulfilled_pct?: number
+  amount_fulfilled_pct?: number
+  amount?: string
+  label?: string
+}
+
+function ImpactProgressBar({ pct, color }: { pct: number; color: string }) {
+  return (
+    <div className="w-full h-2 bg-gray-100 rounded-full overflow-hidden">
+      <div className={`h-full rounded-full transition-all ${color}`} style={{ width: `${Math.min(100, pct)}%` }} />
+    </div>
+  )
+}
 
 export default function DonateContent() {
   const { data: settings = {} } = useQuery({ queryKey: ['settings'], queryFn: fetchSettings })
@@ -74,14 +93,55 @@ export default function DonateContent() {
           {impactItems.length > 0 && (
             <div>
               <h2 className="text-2xl font-black text-[var(--navy)] text-center mb-2">Your Impact</h2>
-              <p className="text-gray-500 text-center mb-8 text-sm">See what your donation can do</p>
-              <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                {impactItems.map(({ id, amount, label }) => (
-                  <div key={id} className="bg-white rounded-2xl p-5 border border-gray-100 shadow-sm text-center hover:border-[var(--gold)] hover:shadow-md transition-all">
-                    <div className="text-2xl font-black text-[var(--gold)] mb-2">{amount}</div>
-                    <div className="text-sm text-gray-500 leading-snug">{label}</div>
-                  </div>
-                ))}
+              <p className="text-gray-500 text-center mb-8 text-sm">See how your donation supports our programmes</p>
+              <div className="grid sm:grid-cols-2 gap-5">
+                {impactItems.map((item) => {
+                  const isNewFormat = item.program
+                  return (
+                    <div key={item.id} className="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm hover:border-[var(--gold)] hover:shadow-md transition-all">
+                      {isNewFormat ? (
+                        <>
+                          <div className="flex items-center gap-3 mb-3">
+                            <span className="bg-[var(--gold-pale)] text-[var(--gold)] text-xs font-black px-3 py-1 rounded-full uppercase tracking-wide">
+                              {item.program}
+                            </span>
+                            {item.focus_area && (
+                              <span className="text-gray-400 text-xs font-semibold">{item.focus_area}</span>
+                            )}
+                          </div>
+                          {item.financial_need && (
+                            <p className="text-[var(--navy)] font-semibold text-sm mb-4 leading-relaxed">{item.financial_need}</p>
+                          )}
+                          <div className="space-y-3">
+                            {item.amount_required && (
+                              <div>
+                                <div className="flex justify-between text-xs mb-1.5">
+                                  <span className="text-gray-500">Amount needed: <span className="font-black text-[var(--navy)]">{item.amount_required}</span></span>
+                                  <span className="font-black text-[var(--gold)]">{item.amount_fulfilled_pct ?? 0}% raised</span>
+                                </div>
+                                <ImpactProgressBar pct={item.amount_fulfilled_pct ?? 0} color="bg-[var(--gold)]" />
+                              </div>
+                            )}
+                            {item.quantity_required && (
+                              <div>
+                                <div className="flex justify-between text-xs mb-1.5">
+                                  <span className="text-gray-500">Quantity: <span className="font-black text-[var(--navy)]">{item.quantity_required}</span></span>
+                                  <span className="font-black text-emerald-600">{item.quantity_fulfilled_pct ?? 0}% fulfilled</span>
+                                </div>
+                                <ImpactProgressBar pct={item.quantity_fulfilled_pct ?? 0} color="bg-emerald-400" />
+                              </div>
+                            )}
+                          </div>
+                        </>
+                      ) : (
+                        <div className="text-center">
+                          <div className="text-2xl font-black text-[var(--gold)] mb-2">{item.amount}</div>
+                          <div className="text-sm text-gray-500 leading-snug">{item.label}</div>
+                        </div>
+                      )}
+                    </div>
+                  )
+                })}
               </div>
             </div>
           )}
@@ -111,7 +171,7 @@ export default function DonateContent() {
                         <>
                           <p className="text-xs font-bold text-gray-400 uppercase tracking-wide mb-2">Via Paybill</p>
                           <DetailRow label="Paybill No." value={s.donation_mpesa_paybill} />
-                          {s.donation_mpesa_account && <DetailRow label="Account Name" value={s.donation_mpesa_account} />}
+                          {s.donation_mpesa_account && <DetailRow label="Account Number" value={s.donation_mpesa_account} />}
                           <DetailRow label="Registered As" value={s.donation_mpesa_name || 'LIFTED TO LIFT'} />
                         </>
                       )}

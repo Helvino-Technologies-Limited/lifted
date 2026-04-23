@@ -16,6 +16,7 @@ const SETTING_GROUPS = [
       { key: 'phone_secondary', label: 'Secondary Phone (optional)', type: 'text', placeholder: '' },
       { key: 'email_primary', label: 'Primary Email', type: 'email', placeholder: 'info@liftedtolift.org' },
       { key: 'email_secondary', label: 'Secondary Email (optional)', type: 'email', placeholder: '' },
+      { key: 'whatsapp_number', label: 'WhatsApp Number (floating button on all pages)', type: 'text', placeholder: '0705560257' },
     ],
   },
   {
