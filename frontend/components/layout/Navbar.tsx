@@ -151,8 +151,8 @@ export default function Navbar() {
 
       {/* Mobile menu */}
       <div className={cn(
-        'lg:hidden bg-white border-t border-gray-100 overflow-hidden transition-all duration-300',
-        isOpen ? 'max-h-screen py-4' : 'max-h-0'
+        'lg:hidden bg-white border-t border-gray-100 transition-all duration-300',
+        isOpen ? 'max-h-[calc(100vh-80px)] overflow-y-auto py-4' : 'max-h-0 overflow-hidden'
       )}>
         <div className="max-w-7xl mx-auto px-4 space-y-1">
           {navLinks.map((link) => (
